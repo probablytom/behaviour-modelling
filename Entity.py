@@ -19,8 +19,24 @@ class Entity:
     def add_behaviour(self, behaviour_to_add):
         self.behaviours.append( Behaviour(behaviour_to_add) )
 
+    
     def add_responsibility(self, responsibility_to_add):
         self.responsibilities.append( Responsibility(responsibility_to_add) )
 
+    
     def add_constraint(self, constraint_to_add):
         self.constraints.append( Constraint(constraint_to_add) )
+    
+    
+    def list_attributes():
+        print self.name + " has attributes: "
+        for attribute in self.attributes: print attribute.semantic_text
+    
+    
+    def list_behaviours():
+        print self.name + " has behaviours: "
+        for behaviour in self.behaviours: print behaviour.behaviour_unparsed
+    
+    def list_responsibilities():
+        print self.name + " has responsibilities: "
+        for responsibility in self.responsibilities: print responsibility.responsibility_unparsed
