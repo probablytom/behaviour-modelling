@@ -11,8 +11,7 @@ def get_entity(entity_name):
     entities.append( new_entity )
     return len(entities) - 1
 
-with open("definitions.cons") as definitions:
-    line = definitions.readline().split(" ")
+def parse_line(line):
     while line[0] != "end" and len(line) != 1: 
         entity_name = line[0]
         entity_index = get_entity(entity_name)
@@ -33,6 +32,11 @@ with open("definitions.cons") as definitions:
             print "Sorry, a " + def_type + " isn't defined. We'll add the others you've defined. \nIf you need this definition, try rewriting the file."
         
         line = definitions.readline().split(" ")
+
+
+with open("definitions.cons") as definitions:
+    line = definitions.readline().split(" ")
+    parse_line(line)
 
 # Fully parsed the definitions file!
 print "Definitions parsed. Jumping into a CLI for interacting with the model.\n"
