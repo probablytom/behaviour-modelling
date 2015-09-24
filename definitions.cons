@@ -1,4 +1,5 @@
-Tom has responsibility: cleaning the flat
-Tim has responsibility: teaching Tom
-Tom has behaviour: learning from Tim
-end
+@entity(tom) has @responsibility(cleaning_flat)
+@entity(tim) has @responsibility(teaching_tom)
+@entity(tim) has @behaviour(teaching_tom)
+@organisation(university) has @property(learning_environment)
+@environment(university) has @property(learning_environment)

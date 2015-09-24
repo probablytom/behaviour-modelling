@@ -12,7 +12,7 @@ def get_entity(entity_name):
     return len(entities) - 1
 
 def parse_line(line):
-    while line[0] != "end" and len(line) != 1: 
+    ''''    while line[0] != "end" and len(line) != 1: 
         entity_name = line[0]
         entity_index = get_entity(entity_name)
     
@@ -32,11 +32,39 @@ def parse_line(line):
             print "Sorry, a " + def_type + " isn't defined. We'll add the others you've defined. \nIf you need this definition, try rewriting the file."
         
         line = definitions.readline().split(" ")
+    '''
+    
+    
+    # Is this an environmental attribute?
+    if "@environment" in line[0]:
+        environment = line[0][ len("@Environment(") :-1]
+        entity_index = get_entity(environment)
+        env_attribute = line[2][ len("@property(") : -1 ]
+        entities[entity_index].add_attribute( env_attribute )
+
+    # Is this an organisational constraint?
+    elif "@organisation" in line[0]:
+        organisation = line[0][ len("@Organisation(") : -1]
+        entity_index = get_entity(organisation)
+        org_constraint = line[2][ len("@properrt(") : -1 ]
+        entities[entity_index].add_attribute( org_constraint )
+
+    # Are we dealing with a behaviour or responsibility?
+    elif "@entity" in line[0]:
+        pass
+    
+    # Default case
+    else:
+        print ' '.join(line)
+        print "^"
+        print "The above line could not be parsed; syntax error."
 
 
 with open("definitions.cons") as definitions:
     line = definitions.readline().split(" ")
-    parse_line(line)
+    while(line[0] != "end" and len(line) != 1):
+        parse_line(line)
+        line = definitions.readline().split(" ")
 
 # Fully parsed the definitions file!
 print "Definitions parsed. Jumping into a CLI for interacting with the model.\n"
