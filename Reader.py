@@ -4,7 +4,7 @@ entities = []
 definitions = None
 
 def get_entity(entity_name):
-    for index in range(0, len(entities) - 1):
+    for index in range(0, len(entities)):
         if entity_name == entities[index].name: return index
     # Entity didn't exist, so we have to create one and return the index to that.
     new_entity = Entity(entity_name)
@@ -46,12 +46,26 @@ def parse_line(line):
     elif "@organisation" in line[0]:
         organisation = line[0][ len("@Organisation(") : -1]
         entity_index = get_entity(organisation)
-        org_constraint = line[2][ len("@properrt(") : -1 ]
+        org_constraint = line[2][ len("@property(") : -1 ]
         entities[entity_index].add_attribute( org_constraint )
 
     # Are we dealing with a behaviour or responsibility?
     elif "@entity" in line[0]:
-        pass
+        entity = line[0][ len("@Entity(") :-1 ]
+        entity_index = get_entity(entity)
+        
+        # Here we check whether we're adding a behaviour or a responsibility.
+        if "@behaviour" in line[2]:
+            behaviour = line[2][len("@behaviour") :-1 ]
+            entities[entity_index].add_behaviour(behaviour)
+        elif "@responsibility" in line[2]:
+            responsibility = line[2][len("@responsibility") :-1 ]
+            entities[entity_index].add_responsibility(responsibility)
+        else:
+            print ' '.join(line)
+            print "The above line could not be parsed; syntax error on attr. token."
+        
+
     
     # Default case
     else:
@@ -71,6 +85,7 @@ print "Definitions parsed. Jumping into a CLI for interacting with the model.\n"
 
 
 # Here we jump into a CLI to interact with the model.
+# NOTE: this should be replaced with a parse_line() prompt in the future. 
 while True:
     line = raw_input("   :: ").split(" ")
     if line[0] == "list":
