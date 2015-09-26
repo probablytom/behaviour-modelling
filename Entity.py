@@ -40,3 +40,29 @@ class Entity:
     def list_responsibilities():
         print self.name + " has responsibilities: "
         for responsibility in self.responsibilities: print responsibility.responsibility_unparsed
+
+    def list_fulfilled_responsibilities(self):
+        fulfilled_responsibilities = []
+        for resp_index in range(0, len(self.responsibilities)):
+            for beh_index in range(0, len(self.behaviours)):
+                responsibility = self.responsibilities[resp_index]
+                behaviour = self.behaviours[beh_index]
+                if responsibility.responsibility_unparsed == behaviour.behaviour_unparsed  and  not(responsibility in fulfilled_responsibilities):
+                    fulfilled_responsibilities.append(responsibility)
+        # Print responsiblities that are fulfilled.
+        if fulfilled_responsibilities == []:
+            print "No fulfilled responsibilities for entity " + self.name + " found."
+        else:
+            print "Fulfilled responsibilities for entity " + self.name + ":"
+            for responsibility in fulfilled_responsibilities: print responsibility.responsibility_unparsed
+
+    def get_fulfilled_responsibilities(self):
+        fulfilled_responsibilities = []
+        for resp_index in range(0, len(self.responsibilities)):
+            for beh_index in range(0, len(self.behaviours)):
+                responsibility = self.responsibilities[resp_index]
+                behaviour = self.behaviours[beh_index]
+                if responsibility.responsibility_unparsed == behaviour.behaviour_unparsed  and  not(responsibility in fulfilled_responsibilities):
+                    fulfilled_responsibilities.append(responsibility)
+        # Return the responsibilities that have corresponding behaviours that make them fulfilled.
+        return fulfilled_responsibilities
