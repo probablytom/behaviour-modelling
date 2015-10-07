@@ -1,3 +1,5 @@
+from random import random as random_float
+
 # Resources regarding the workflow's environment
 time = 0 # to be incremented upon every step
 
@@ -8,6 +10,14 @@ resources = {}
 resources["stress"] = 0.1
 resources["building"] = True
 resources["money"] = 10000
+
+
+# -----------------------------------------------------------------------------
+
+
+def random_boolean():
+    return random_float() > 0.5
+
 
 
 # -----------------------------------------------------------------------------
@@ -26,7 +36,7 @@ def write_code():
     resources["stress"] += 0.05
 
 def run_tests():
-    resources["building"] = True  # TODO: To be changed by random int later
+    resources["building"] = random_boolean()  
     resources["money"] -= 100
     if resources["building"]:
         resources["stress"] -= 0.1
@@ -37,7 +47,7 @@ def run_tests():
 
 def integration_test():
     resources["money"] -= 100
-    resources["building"] = True  # TODO: To be changed at random later
+    resources["building"] = random_boolean()  
     if resources["building"]:
         resources["stress"] -= 0.05
     else:
@@ -51,7 +61,7 @@ def merge():
 
 def user_acceptance_test():
     resources["money"] -= 100
-    resources["building"] = True  # TODO: To change by a random int later
+    resources["building"] = random_boolean()  
     if resources["building"]:
         resources["stress"] -= 0.05
     else:
