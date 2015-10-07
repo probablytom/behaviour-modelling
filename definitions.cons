@@ -1,5 +1,0 @@
-@entity(tom) has @responsibility(cleaning_flat)
-@entity(tim) has @responsibility(teaching_tom)
-@entity(tim) has @behaviour(teaching_tom)
-@organisation(university) has @property(learning_environment)
-@environment(university) has @property(learning_environment)
