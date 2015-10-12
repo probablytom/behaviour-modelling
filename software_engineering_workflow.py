@@ -1,7 +1,5 @@
-from random import random as random_float
-
-# Resources regarding the workflow's environment
-time = 0 # to be incremented upon every step
+import random
+from logger import Logger
 
 
 # The resources we'll be editing
@@ -11,106 +9,186 @@ resources["stress"] = 0.1
 resources["building"] = True
 resources["money"] = 10000
 
+# For keeping a log / printing to the console
+log = Logger("event.log", True, True)
+
 
 # -----------------------------------------------------------------------------
+# HELPER FUNCTIONS
+# -----------------------------------------------------------------------------
 
-
+# bool(random.getrandbits(1)) if we want to be fast!
 def random_boolean():
-    return random_float() > 0.5
+    return random.choice([True, False])
 
 
 # -----------------------------------------------------------------------------
-
+# LOW LEVEL ACTIONS
+# atomic activity for actual activity within the sociotechnical system
+# all interactions with resources, shouldn't be anything else...
+# -----------------------------------------------------------------------------
 
 def run_model():
     create_branch()
 
 # The functions that act as actions within the flowchart
 def create_branch():
-    print "Creating branch"
-    write_tests()
+    log.log_line("Creating new branch")
 
 def write_tests():
-    print "Writing tests"
+    log.log_line("Writing tests")
     resources['money'] -= 100
     resources["stress"] += 0.1
-    write_code()
 
 def write_code():
-    print "Writing code"
+    log.log_line("Writing code")
     resources["money"] -= 100
     resources["stress"] += 0.05
-    run_tests()
 
 def run_tests():
-    print "Running tests against code"
+    log.log_line("Running tests against code")
     resources["building"] = random_boolean()  
     resources["money"] -= 100
     if resources["building"]:
-        print "\t- Tests successful!"
+        log.log_line("\t- Tests successful!")
         resources["stress"] -= 0.1
-        integration_test()
+        return True
     else:
-        print "\t- Tests unsuccessful"
-        print "\t- Rewriting tests"
+        log.log_line("\t- Tests unsuccessful")
+        log.log_line("\t- Rewriting tests")
         resources["stress"] += 0.1
-        write_tests()
+        return False
 
 def integration_test():
-    print "Running integration test"
+    log.log_line("Running integration test")
     resources["money"] -= 100
     resources["building"] = random_boolean()  
     if resources["building"]:
-        print "\t- Integration test successful!"
+        log.log_line("\t- Integration test successful!")
         resources["stress"] -= 0.05
-        merge()
+        return True
     else:
-        print "\t- Integration test unsuccessful"
-        print "\t- Rewriting tests"
+        log.log_line("\t- Integration test unsuccessful")
+        log.log_line("\t- Rewriting tests")
         resources["stress"] += 0.05
-        write_tests()
+        return False
 
 def merge():
-    print "Merging branch against codebase"
+    log.log_line("Merging branch against codebase")
     resources["money"] -= 100
     resources["stress"] += 0.05  # Because merging is always stressful, particularly with a large codebase. 
     # Perhaps this should scale to some "changes made" resource that gets incremented by the code and test writing?
-    user_acceptance_test()
+    # user_acceptance_test()
 
 def user_acceptance_test():
-    print "Performing user acceptance tests"
+    log.log_line("Performing user acceptance tests")
     resources["money"] -= 100
     resources["building"] = random_boolean()  
     if resources["building"]:
-        print "\t- Test sucessful!"
+        log.log_line("\t- Test successful!")
         resources["stress"] -= 0.05
-        deploy()
+        return True
     else:
-        print "\t- Test unsuccessful"
-        print "\t- Rewriting tests"
+        log.log_line("\t- Test unsuccessful")
+        log.log_line("\t- Rewriting tests")
         resources["stress"] += 0.05
-        write_tests()
+        return False
 
 def deploy():
-    print "Deploying!"
+    log.log_line("Deploying product")
     resources["stress"] += 0.1
     resources["money"] -= 100
-    if not resources["building"]:
-        print "\t- Problems with building"
-        print "\t- Rerunning integration test"
-        integration_test()
+    if resources["building"]:
+        log.log_line("\t- Deployment successful!")
+        return True
     else:
-        print "\t- Deployment successful!"
-        complete()
+        log.log_line("\t- Problems with building")
+        log.log_line("\t- Rerunning integration test")
+        return False
 
 def complete():
-    print "--------------------------------------------------------------------------------"
-    print "Complete!"
+    log.log_line("--------------------------------------------------------------------------------")
+    log.log_line("Complete!")
+    log.log_line()
 
     for key in resources.keys():
-        print key + ":\t\t" + str(resources[key])
-    print "--------------------------------------------------------------------------------"
+        log.log_line(key + ":\t\t" + str(resources[key]))
+    log.log_line("--------------------------------------------------------------------------------")
 
 
 # -----------------------------------------------------------------------------
-run_model()
+# HIGHER LEVEL ACTIONS
+# chaining together the atomic actions
+# static control flow, no dynamic flow yet
+# -----------------------------------------------------------------------------
+
+def implement_feature_outcome():
+    write_tests()
+    write_code()
+    if run_tests(): return True
+    else:           return False
+
+def feature_integration_outcome():
+    if integration_test():
+        merge()
+        return True
+    else:
+        return False
+
+def user_acceptance_testing_outcome():
+    return user_acceptance_test()
+
+def attempt_deployment_outcome():
+    return deploy
+
+
+def print_statistics():
+    complete()
+
+
+# -----------------------------------------------------------------------------
+# CONTROL ARCHITECTURE
+# dynamic control flow
+# making decisions based on outcomes of events
+# not just chaining together actions, now we're creating the actual model
+# -----------------------------------------------------------------------------
+
+def begin_feature_implementation():
+    if implement_feature_outcome(): integrate_feature_into_codebase()
+    else: begin_feature_implementation()
+
+def integrate_feature_into_codebase():
+    if feature_integration_outcome(): run_user_acceptance_tests()
+    else: begin_feature_implementation()
+
+def run_user_acceptance_tests():
+    if user_acceptance_testing_outcome(): begin_deployment_of_feature()
+    else: begin_feature_implementation()
+
+def begin_deployment_of_feature():
+    if attempt_deployment_outcome(): end()
+    else: integrate_feature_into_codebase()
+
+def complete_activity():
+    print_statistics()
+
+
+# -----------------------------------------------------------------------------
+# ACTION FUNCTIONS
+# to kick everything off and bring it all to a halt
+# -----------------------------------------------------------------------------
+
+def begin():
+    begin_feature_implementation()
+
+def end():
+    complete_activity()
+
+
+
+# -----------------------------------------------------------------------------
+# RUN
+# begin the model!
+# -----------------------------------------------------------------------------
+
+begin()
