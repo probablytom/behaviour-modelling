@@ -11,7 +11,7 @@ resources = {}
 resources["stress"] = 0.1
 resources["building"] = True
 resources["money"] = 10000
-log = Logger()
+log = Logger("event.log", True, False)
 
 # -----------------------------------------------------------------------------
 
