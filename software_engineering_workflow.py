@@ -17,7 +17,7 @@ log = Logger("event.log", True, True)
 # HELPER FUNCTIONS
 # -----------------------------------------------------------------------------
 
-
+# bool(random.getrandbits(1)) if we want to be fast!
 def random_boolean():
     return random.choice([True, False])
 
