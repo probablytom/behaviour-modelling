@@ -1,5 +1,6 @@
 import random
 from logger import Logger
+from Register import Registrar
 
 
 # The resources we'll be editing
@@ -10,7 +11,8 @@ resources["building"] = True
 resources["money"] = 10000
 
 # For keeping a log / printing to the console
-log = Logger("event.log", True, True)
+# filepath-----\/           Logging--\/   printing--\/
+log = Logger(   "event.log",         True,           False)
 
 
 # -----------------------------------------------------------------------------
@@ -153,6 +155,8 @@ def print_statistics():
 # not just chaining together actions, now we're creating the actual model
 # -----------------------------------------------------------------------------
 
+# Commented out for alternative implementation below. This is only for testing!
+'''
 def begin_feature_implementation():
     if implement_feature_outcome(): integrate_feature_into_codebase()
     else: begin_feature_implementation()
@@ -171,7 +175,22 @@ def begin_deployment_of_feature():
 
 def complete_activity():
     print_statistics()
+'''
 
+def begin_feature_implementation():
+    implement_feature_outcome()
+
+def integrate_feature_into_codebase():
+    feature_integration_outcome()
+
+def run_user_acceptance_tests():
+    user_acceptance_testing_outcome()
+
+def begin_deployment_of_feature():
+    attempt_deployment_outcome()
+
+def complete_activity():
+    print_statistics()
 
 # -----------------------------------------------------------------------------
 # ACTION FUNCTIONS
@@ -186,9 +205,23 @@ def end():
 
 
 
+
+# -----------------------------------------------------------------------------
+# REGISTER
+# turn the functions we're defining here into a saved, callable model
+# -----------------------------------------------------------------------------
+
+
+registrar = Registrar()
+registrar.register("Began feature implementation", begin_feature_implementation)
+registrar.register("Integrated feature into codebase", integrate_feature_into_codebase)
+registrar.register("Ran user acceptance test", run_user_acceptance_tests)
+registrar.register("Began deployment of feature", begin_deployment_of_feature)
+registrar.commit()
+
 # -----------------------------------------------------------------------------
 # RUN
 # begin the model!
 # -----------------------------------------------------------------------------
 
-begin()
+#begin()
