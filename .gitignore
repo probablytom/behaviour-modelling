@@ -58,3 +58,11 @@ target/
 
 # Pycharm stuff:
 .idea/
+
+
+## CUSTOM
+
+# Files generated/used by the models we're building
+.cbj  # Compiled behaviour journal
+.jbr  # Jounralled behaviour record
+event.log
