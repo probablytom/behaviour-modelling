@@ -55,3 +55,14 @@ docs/_build/
 
 # PyBuilder
 target/
+
+
+## Custom
+
+# Intellij tools folders
+.idea/
+
+# Leftover files from Latex compilation
+*.toc
+*.aux
+*.pdf
