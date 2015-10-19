@@ -83,7 +83,7 @@
       description="Builds a working version of the document, formatted for internal distribution and review."
       >
     <antcall target="build-file">
-      <param name="file.name" value="l4proj"/>
+      <param name="file.name" value="dissertation"/>
     </antcall>
   </target>
   
