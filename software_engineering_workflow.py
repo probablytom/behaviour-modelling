@@ -53,17 +53,15 @@ def write_code():
 
 def run_tests():
     log.log_line("Running tests against code")
-    resources["building"] = random_boolean()  
+    resources["tests passing"] = random_boolean()  
     resources["money"] -= 100
-    if resources["building"]:
+    if resources["tests passing"]:
         log.log_line("\t- Tests successful!")
         resources["stress"] -= 0.1
-        resources["tests passing"] = True
     else:
         log.log_line("\t- Tests unsuccessful")
         log.log_line("\t- Rewriting tests")
         resources["stress"] += 0.1
-        resources["tests passing"] = False
 
 def integration_test():
     log.log_line("Running integration test")
