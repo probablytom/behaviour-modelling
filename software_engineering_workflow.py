@@ -9,6 +9,10 @@ resources = {}
 resources["stress"] = 0.1
 resources["building"] = True
 resources["money"] = 10000
+resources["tests passing"] = False
+resources["integration tests passing"] = False
+resources["user acceptance tests passing"] = False
+resources["successful deployment"] = False
 
 # For keeping a log / printing to the console
 # filepath-----\/           Logging--\/   printing--\/
@@ -54,12 +58,12 @@ def run_tests():
     if resources["building"]:
         log.log_line("\t- Tests successful!")
         resources["stress"] -= 0.1
-        return True
+        resources["tests passing"] = True
     else:
         log.log_line("\t- Tests unsuccessful")
         log.log_line("\t- Rewriting tests")
         resources["stress"] += 0.1
-        return False
+        resources["tests passing"] = False
 
 def integration_test():
     log.log_line("Running integration test")
@@ -68,19 +72,18 @@ def integration_test():
     if resources["building"]:
         log.log_line("\t- Integration test successful!")
         resources["stress"] -= 0.05
-        return True
+        resources["integration tests passing"] = True
     else:
         log.log_line("\t- Integration test unsuccessful")
         log.log_line("\t- Rewriting tests")
         resources["stress"] += 0.05
-        return False
+        resources["integration tests passing"] = False
 
 def merge():
     log.log_line("Merging branch against codebase")
     resources["money"] -= 100
     resources["stress"] += 0.05  # Because merging is always stressful, particularly with a large codebase. 
     # Perhaps this should scale to some "changes made" resource that gets incremented by the code and test writing?
-    # user_acceptance_test()
 
 def user_acceptance_test():
     log.log_line("Performing user acceptance tests")
@@ -89,12 +92,12 @@ def user_acceptance_test():
     if resources["building"]:
         log.log_line("\t- Test successful!")
         resources["stress"] -= 0.05
-        return True
+        resources["user acceptance tests passing"] = True
     else:
         log.log_line("\t- Test unsuccessful")
         log.log_line("\t- Rewriting tests")
         resources["stress"] += 0.05
-        return False
+        resources["user acceptance tests passing"] = False
 
 def deploy():
     log.log_line("Deploying product")
@@ -102,11 +105,11 @@ def deploy():
     resources["money"] -= 100
     if resources["building"]:
         log.log_line("\t- Deployment successful!")
-        return True
+        resources["successful deployment"] = True
     else:
         log.log_line("\t- Problems with building")
         log.log_line("\t- Rerunning integration test")
-        return False
+        resources["successful deployment"] = False
 
 def complete():
     log.log_line("--------------------------------------------------------------------------------")
@@ -124,24 +127,19 @@ def complete():
 # static control flow, no dynamic flow yet
 # -----------------------------------------------------------------------------
 
-def implement_feature_outcome():
+def implement_feature():
     write_tests()
     write_code()
-    if run_tests(): return True
-    else:           return False
+    run_tests()
 
-def feature_integration_outcome():
-    if integration_test():
-        merge()
-        return True
-    else:
-        return False
+def feature_integration():
+    integration_test()
 
-def user_acceptance_testing_outcome():
-    return user_acceptance_test()
+def user_acceptance_testing():
+    user_acceptance_test()
 
-def attempt_deployment_outcome():
-    return deploy
+def attempt_deployment():
+    deploy()
 
 
 def print_statistics():
@@ -155,39 +153,28 @@ def print_statistics():
 # not just chaining together actions, now we're creating the actual model
 # -----------------------------------------------------------------------------
 
-# Commented out for alternative implementation below. This is only for testing!
-'''
-def begin_feature_implementation():
-    if implement_feature_outcome(): integrate_feature_into_codebase()
-    else: begin_feature_implementation()
-
-def integrate_feature_into_codebase():
-    if feature_integration_outcome(): run_user_acceptance_tests()
-    else: begin_feature_implementation()
-
-def run_user_acceptance_tests():
-    if user_acceptance_testing_outcome(): begin_deployment_of_feature()
-    else: begin_feature_implementation()
-
-def begin_deployment_of_feature():
-    if attempt_deployment_outcome(): end()
-    else: integrate_feature_into_codebase()
-
-def complete_activity():
-    print_statistics()
-'''
 
 def begin_feature_implementation():
-    implement_feature_outcome()
+    implement_feature()
+    while not resources["tests passing"]:
+        implement_feature()
 
 def integrate_feature_into_codebase():
-    feature_integration_outcome()
+    feature_integration()
+    while not resources["integration tests passing"]:
+        feature_integration()
+    merge()  # Should this be here or separate?
 
 def run_user_acceptance_tests():
-    user_acceptance_testing_outcome()
+    user_acceptance_testing()
+    while not resources["user acceptance tests passing"]:
+        user_acceptance_testing()
 
 def begin_deployment_of_feature():
-    attempt_deployment_outcome()
+    attempt_deployment()
+    while not resources["successful deployment"]:
+        # here there *should* be a link back to the integrate_feature loop. How do we do this with our current model?
+        pass  # TO COMPLETE TO COMPLETE TO COMPLETE TO COMPLETE TO COMPLETE TO COMPLETE TO COMPLETE TO COMPLETE
 
 def complete_activity():
     print_statistics()
