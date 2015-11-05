@@ -16,6 +16,22 @@ log = Logger(   "event.log",         True,           False)
 def random_boolean():
     return random.choice([True, False])
 
+# Note: this is specifically for detecting a hidden bug! I think this is all we need for bug-detection-probability-things
+def probability_of_bug_being_detected():
+    probability_of_not_detecting = 1 - resources["probability of bug being detected"]
+    no_of_hidden_bugs = resources["number of hidden bugs"]
+    1 - probability_of_not_detecting**no_of_hidden_bugs
+
+
+# We write up to 20 lines of code, or remove up to 10
+def estimate_lines_written():
+    lower_bound = 0 if resources["lines of code"] < 10 else -10
+    return random.choice([lower_bound, 20])
+
+# Finding out how many bugs are in a collection of fresh lines of code
+def number_of_new_bugs_in_lines(number_of_lines):
+    return number_of_lines / 15
+
 
 # -----------------------------------------------------------------------------
 # LOW LEVEL ACTIONS
@@ -37,19 +53,41 @@ def create_ticket():
 def checkout_branch():
     pass
 
+def write_code_to_fix_bugs():
+    log.log_line("Writing code to fix bugs")
+    resources["money"] -= 50
+    resources["stress"] += 0.05
+    number_of_new_lines_of_code = estimate_lines_written() / 2
+    resources["lines of code"] += number_of_new_lines_of_code
+    
+    # Not increasing the number of hidden bugs as any bugs in the code being worked on should be picked up by the tests that are currently failing - is this correct?
+    # resources["number of hidden bugs"] += number_of_bugs_in_lines(number_of_new_lines_of_code)
+
+'''
+def run_bug_tests():
+    if bug_squashed():
+        
+def run_bug_tests():
+    if bug_squashed():
+'''    
+
 def write_tests():
     log.log_line("Writing tests")
     resources['money'] -= 100
     resources["stress"] += 0.1
+    resources["number of tests"] += 1
 
 def write_code():
     log.log_line("Writing code")
     resources["money"] -= 100
     resources["stress"] += 0.05
-
+    number_of_new_lines_of_code = estimate_lines_written()
+    resources["lines of code"] += number_of_new_lines_of_code
+    resources["number of hidden bugs"] += number_of_bugs_in_lines(number_of_new_lines_of_code)
+    
 def run_tests():
     log.log_line("Running tests against code")
-    resources["tests passing"] = random_boolean()  
+    resources["tests passing"] = True if probability_of_bug_being_detected() < 0.15 else False
     resources["money"] -= 100
     if resources["tests passing"]:
         log.log_line("\t- Tests successful!")
@@ -102,6 +140,7 @@ def attempt_deployment():
     if resources["successful deployment"]:
         log.log_line("\t- Deployment successful!")
         resources["tickets"] -= 1
+        resources["stress"] -= -0.1
     else:
         log.log_line("\t- Problems with building")
         log.log_line("\t- Rerunning integration test")
