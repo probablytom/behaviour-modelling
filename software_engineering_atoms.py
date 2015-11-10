@@ -53,7 +53,7 @@ def create_ticket():
 def checkout_branch():
     pass
 
-def write_code_to_fix_bugs():
+def write_code_to_fix_bug():
     log.log_line("Writing code to fix bugs")
     resources["money"] -= 50
     resources["stress"] += 0.05
@@ -62,6 +62,10 @@ def write_code_to_fix_bugs():
     
     # Not increasing the number of hidden bugs as any bugs in the code being worked on should be picked up by the tests that are currently failing - is this correct?
     # resources["number of hidden bugs"] += number_of_bugs_in_lines(number_of_new_lines_of_code)
+
+def run_tests_on_bug():
+    log.log_line("running tests on previously hidden bug to fix")
+
 
 '''
 def run_bug_tests():
