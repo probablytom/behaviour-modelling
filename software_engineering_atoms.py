@@ -20,7 +20,7 @@ def random_boolean():
 def probability_of_bug_being_detected():
     probability_of_not_detecting = 1 - resources["probability of bug being detected"]
     no_of_hidden_bugs = resources["number of hidden bugs"]
-    1 - probability_of_not_detecting**no_of_hidden_bugs
+    return 1 - probability_of_not_detecting**no_of_hidden_bugs
 
 
 # We write up to 20 lines of code, or remove up to 10
@@ -53,6 +53,9 @@ def create_ticket():
 def checkout_branch():
     pass
 
+def begin_to_squash_bug():
+    pass
+
 def write_code_to_fix_bug():
     log.log_line("Writing code to fix bugs")
     resources["money"] -= 50
@@ -61,19 +64,20 @@ def write_code_to_fix_bug():
     resources["lines of code"] += number_of_new_lines_of_code
     
     # Not increasing the number of hidden bugs as any bugs in the code being worked on should be picked up by the tests that are currently failing - is this correct?
+    # Update: This is incorrect, as hidden bugs should be introduced, then discovered. Leaving it like this to fix later.
     # resources["number of hidden bugs"] += number_of_bugs_in_lines(number_of_new_lines_of_code)
 
 def run_tests_on_bug():
     log.log_line("running tests on previously hidden bug to fix")
+    resources["tests to squash bug passing"] = True if probability_of_bug_being_detected > 0.1 else False
+    if resources["tests to squash bug passing"]:
+        resources["number of bugs this iteration"] -= 1
+        resources["number of bugs"] -= 1
+        resources["number of failing tests this iteration"]
+    else:
+        pass
+    resources["tests passing"] = (resources["number of failing tests this iteration"] == 0)
 
-
-'''
-def run_bug_tests():
-    if bug_squashed():
-        
-def run_bug_tests():
-    if bug_squashed():
-'''    
 
 def write_tests():
     log.log_line("Writing tests")
@@ -86,20 +90,26 @@ def write_code():
     resources["money"] -= 100
     resources["stress"] += 0.05
     number_of_new_lines_of_code = estimate_lines_written()
+    number_of_bugs_added = number_of_bugs_in_lines(number_of_new_lines_of_code)
     resources["lines of code"] += number_of_new_lines_of_code
-    resources["number of hidden bugs"] += number_of_bugs_in_lines(number_of_new_lines_of_code)
+    resources["number of hidden bugs"] += number_of_bugs_added
+    resources["number of bugs"] += number_of_bugs_added
+    resources["number of bugs added this iteration"] += number_of_bugs_added
     
 def run_tests():
     log.log_line("Running tests against code")
-    resources["tests passing"] = True if probability_of_bug_being_detected() < 0.15 else False
-    resources["money"] -= 100
-    if resources["tests passing"]:
-        log.log_line("\t- Tests successful!")
-        resources["stress"] -= 0.1
-    else:
-        log.log_line("\t- Tests unsuccessful")
-        log.log_line("\t- Rewriting tests")
-        resources["stress"] += 0.1
+    for test in range(0, resources["number of tests"]):
+        resources["current test passing"] = True if probability_of_bug_being_detected() > 0.15 else False
+        resources["money"] -= 100
+        if resources["current test passing"]:
+            log.log_line("\t- Tests successful!")
+            resources["stress"] -= 0.1
+        else:
+            log.log_line("\t- Tests unsuccessful")
+            log.log_line("\t- Rewriting tests")
+            resources["stress"] += 0.05
+            resources["number of failing tests this iteration"] += 1
+    resources["tests passing"] = (resources["number of failing tests this iteration"] == 0)
 
 def integration_test():
     log.log_line("Running integration test")

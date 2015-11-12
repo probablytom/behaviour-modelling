@@ -6,6 +6,20 @@ def modify_code():
     write_code()
     run_tests()
 
+def attempt_to_squash_bug():
+    write_code_to_fix_bug()
+    run_tests_on_bug()
+
+def squash_a_discovered_bug():
+    begin_to_squash_bug()
+    initial_problem_count = resources["number of failing tests this iteration"]
+    while initial_problem_count == resources["number of failing tests this iteration"]:
+        attempt_to_squash_bug()
+
+def fix_failing_tests():
+    while resources["number of tests failing this iteration"] > 0:
+        squash_a_discovered_bug()
+
 def check_code_is_working():
     while not resources["tests passing"]:
         modify_code()

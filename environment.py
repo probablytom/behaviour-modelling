@@ -15,6 +15,10 @@ resources["number of hidden bugs"] = 0
 resources["number of bugs"] = 0
 #resources["estimated total number of bugs"] = estimate_bugs
 resources["lines of code"] = 1000  # We start with a fairly small codebase
+resources["number of bugs added this iteration"] = 0
+resources["tests to squash bug passing"] = False
+resources["number of failing tests this iteration"] = 0
+resources["current test passing"] = True
 
 # Should the number of tickets also be a record of bugs? (I'm inclined to say no)
 
