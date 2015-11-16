@@ -62,6 +62,9 @@ def make_changes():
     deploy()
     finish_feature_implementation()
 
+def implement_1000_features():
+    for i in range(1000):
+        implement_new_feature()
 
 '''
 NOTE 1
