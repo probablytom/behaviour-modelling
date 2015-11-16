@@ -73,7 +73,7 @@ def run_tests_on_bug():
     if resources["tests to squash bug passing"]:
         resources["number of bugs this iteration"] -= 1
         resources["number of bugs"] -= 1
-        resources["number of failing tests this iteration"]
+        resources["number of failing tests this iteration"] -= 1
     else:
         pass
     resources["tests passing"] = (resources["number of failing tests this iteration"] == 0)
