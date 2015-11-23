@@ -1,6 +1,7 @@
 import random
 from logger import Logger
 from environment import resources
+from decorator import atom  # Will need renaming
 
 
 # For keeping a log / printing to the console
@@ -78,11 +79,9 @@ def run_tests_on_bug():
         pass
     resources["tests passing"] = (resources["number of failing tests this iteration"] == 0)
 
-
-def write_tests():
+@atom
+def write_tests(money=-100, stress=0.1):
     log.log_line("Writing tests")
-    resources['money'] -= 100
-    resources["stress"] += 0.1
     resources["number of tests"] += 1
 
 def write_code():
@@ -90,7 +89,7 @@ def write_code():
     resources["money"] -= 100
     resources["stress"] += 0.05
     number_of_new_lines_of_code = estimate_lines_written()
-    number_of_bugs_added = number_of_bugs_in_lines(number_of_new_lines_of_code)
+    number_of_bugs_added = number_of_new_bugs_in_lines(number_of_new_lines_of_code)
     resources["lines of code"] += number_of_new_lines_of_code
     resources["number of hidden bugs"] += number_of_bugs_added
     resources["number of bugs"] += number_of_bugs_added
