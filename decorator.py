@@ -10,7 +10,7 @@ def atom(func):
     return wrapper
 
 # to be run after every function, say, to decrease money in a budget.
-def post_function_sequence(**kwargs):
+def post_function_sequence(kwargs):
     print "post_func"
     for key, value in kwargs.iteritems():
         resources[key] += value  # If we're only using integers?!
@@ -20,3 +20,17 @@ def post_function_sequence(**kwargs):
 # This should be a bool for any implementation of the system. 
 def precondition():
     return resources["money"] >= 0
+
+
+
+class atom_args(object):
+    def __init__(self, **kwargs):
+        self.modifications = kwargs
+
+    def __call__(self, func):
+        def wrap(*args):
+
+            if precondition():
+                func(*args)
+                post_function_sequence(self.modifications)
+        return wrap
