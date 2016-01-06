@@ -34,3 +34,9 @@ class atom_args(object):
                 func(*args)
                 post_function_sequence(self.modifications)
         return wrap
+
+
+def mutate_comment_line(func):
+    def wrapper(*args, **kwargs):
+        func(*args, **kwargs)
+    return wrapper
