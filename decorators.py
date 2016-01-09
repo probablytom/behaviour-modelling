@@ -35,8 +35,15 @@ class atom_args(object):
                 post_function_sequence(self.modifications)
         return wrap
 
-
+# This is simply to indicate to our mutation library that this atom needs a line commented.
 def mutate_comment_line(func):
+    def wrapper(*args, **kwargs):
+        func(*args, **kwargs)
+    return wrapper
+
+
+# This is simply to indicate to our mutation library that this atom should have its contents ignored.
+def mutate_ignore(func):
     def wrapper(*args, **kwargs):
         func(*args, **kwargs)
     return wrapper
