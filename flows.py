@@ -53,6 +53,7 @@ def implement_new_feature():
     create_branch()
     make_changes()
 
+@mutate_comment_line
 def make_changes():
     checkout_branch()
     implement_feature_using_ttd()
@@ -62,6 +63,7 @@ def make_changes():
     deploy()
     finish_feature_implementation()
 
+@mutate_comment_line
 def implement_1000_features():
     for i in range(1000):
         implement_new_feature()
