@@ -17,7 +17,6 @@ class MutantTransformer(ast.NodeTransformer):
 
     # Returns line number comented or -1 if commenting failed
     def attempt_comment_from(self, lineno, indent = None):
-        line = self.source_lines[lineno-1]
         can_comment = False
         will_comment = True
         lineno -= 1
@@ -26,11 +25,23 @@ class MutantTransformer(ast.NodeTransformer):
             lineno += 1
             can_comment, will_comment = self.commentable_line(self.source_lines[lineno])
             if not will_comment:
+                
                 return -1  # Couldn't comment
+        line = self.source_lines[lineno-1]
         if indent is None:
             indent = self.indentation(line)
         self.source_lines[lineno-1] = (indent + '#Mutant#  ' + line[len(indent):]).rstrip() + '\n'
-        return lineno
+        return 0
+
+    def attempt_comment_node(self, node):
+        for line in node.body:
+            if not ('body' in dir(line)):
+                line_source = self.source_lines[line.lineno-1]
+                indent = self.indentation(line_source)
+                self.source_lines[line.lineno-1] = (indent + '#Mutant#  ' + line_source[len(indent):]).rstrip() + '\n'
+                #if self.attempt_comment_from(line.lineno) == 0:
+                return 0
+        return -1
 
     def indentation(self, line):
         m = INDENT_PAT.search(line)
@@ -77,7 +88,7 @@ class MutantTransformer(ast.NodeTransformer):
             if 'id' in dir(decorator): decorator_name = decorator.id
             else:                    decorator_name = decorator.func.id
             if decorator_name == "mutate_comment_line": 
-                line_commented = self.attempt_comment_from(int(node.lineno))
+                line_commented = self.attempt_comment_node(node)
                 if line_commented == -1: print "Failed to mutate at line " + str(node.lineno)
                 else:                    print "Mutated at line " + str(node.lineno)
 
