@@ -34,13 +34,15 @@ class MutantTransformer(ast.NodeTransformer):
         return 0
 
     def attempt_comment_node(self, node):
+        linecount = 0
         for line in node.body:
             if not ('body' in dir(line)):
                 line_source = self.source_lines[line.lineno-1]
                 indent = self.indentation(line_source)
                 self.source_lines[line.lineno-1] = (indent + '#Mutant#  ' + line_source[len(indent):]).rstrip() + '\n'
                 #if self.attempt_comment_from(line.lineno) == 0:
-                return 0
+                return linecount
+            linecount += 1
         return -1
 
     def indentation(self, line):
@@ -90,11 +92,15 @@ class MutantTransformer(ast.NodeTransformer):
             if decorator_name == "mutate_comment_line": 
                 line_commented = self.attempt_comment_node(node)
                 if line_commented == -1: print "Failed to mutate at line " + str(node.lineno)
-                else:                    print "Mutated at line " + str(node.lineno)
+                else:                    print "Mutated at line " + str(node.lineno); print "line became: \n" + self.source_lines[node.lineno + line_commented + 1]
 
 if __name__ == "__main__":
-    with open("../flows.py") as env:
+    with open("test_code_to_mutate.py") as env:
         uin = env.read()
         visitor = MutantTransformer(uin.split('\n'))
         t = ast.parse(uin)
         visitor.visit(t)
+        print
+        print
+        print
+        exec('\n'.join(visitor.source_lines))
