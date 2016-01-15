@@ -1,4 +1,5 @@
-import sys, re, ast
+import sys, re, ast, random
+from codegen import to_source
 
 
 INDENT_PAT = re.compile('^([ \t]*)[^ \t]', re.MULTILINE)
@@ -8,7 +9,8 @@ class MutantTransformer(ast.NodeTransformer):
     def __init__(self, source_lines):
         self.source_lines = source_lines
 
-    def comment_line(self, lineno, indent = None):
+    def comment_line(self, line_node, lineno = None, indent = None):
+        if lineno == None: lineno = line_node.lineno
         line = self.source_lines[lineno-1]
         if indent is None:
             indent = self.indentation(line)
@@ -40,7 +42,6 @@ class MutantTransformer(ast.NodeTransformer):
                 line_source = self.source_lines[line.lineno-1]
                 indent = self.indentation(line_source)
                 self.source_lines[line.lineno-1] = (indent + '#Mutant#  ' + line_source[len(indent):]).rstrip() + '\n'
-                #if self.attempt_comment_from(line.lineno) == 0:
                 return linecount
             linecount += 1
         return -1
@@ -86,21 +87,31 @@ class MutantTransformer(ast.NodeTransformer):
 
     #NOTE: This will work differently depending on whether the decorator takes arguments. 
     def visit_FunctionDef(self, node):
-        for decorator in node.decorator_list:
+        mutatables = []
+        linesToCheck = [node.body]
+        for lineSet in linesToCheck:
+            for item in lineSet:
+                if not hasattr(item, 'body'):
+                    mutatables.append(item)
+                else:
+                    pass#lineSet.append(item.body)
+        if len(mutatables) > 0: node.body.remove(random.choice(mutatables))
+        return self.generic_visit(node)
+        '''for decorator in node.decorator_list:
             if 'id' in dir(decorator): decorator_name = decorator.id
             else:                    decorator_name = decorator.func.id
             if decorator_name == "mutate_comment_line": 
                 line_commented = self.attempt_comment_node(node)
                 if line_commented == -1: print "Failed to mutate at line " + str(node.lineno)
-                else:                    print "Mutated at line " + str(node.lineno); print "line became: \n" + self.source_lines[node.lineno + line_commented + 1]
+                else:                    print "Mutated at line " + str(node.lineno); print "line became: \n" + self.source_lines[node.lineno + line_commented + 1]'''
 
 if __name__ == "__main__":
     with open("test_code_to_mutate.py") as env:
         uin = env.read()
         visitor = MutantTransformer(uin.split('\n'))
         t = ast.parse(uin)
-        visitor.visit(t)
+        t =visitor.visit(t)
+        print to_source(t)
         print
         print
-        print
-        exec('\n'.join(visitor.source_lines))
+        exec( to_source(t) )#exec('\n'.join(visitor.source_lines))
