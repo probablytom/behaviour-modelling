@@ -6,8 +6,10 @@ INDENT_PAT = re.compile('^([ \t]*)[^ \t]', re.MULTILINE)
 
 class MutantTransformer(ast.NodeTransformer):
 
-    def __init__(self, source_lines):
+    def __init__(self, source_lines, mutation='comment_line', strip_decorators = True):
         self.source_lines = source_lines
+        self.strip_decorators = strip_decorators
+        self.mutation = mutation
 
     def comment_line(self, line_node, lineno = None, indent = None):
         if lineno == None: lineno = line_node.lineno
@@ -88,6 +90,8 @@ class MutantTransformer(ast.NodeTransformer):
     #NOTE: This will work differently depending on whether the decorator takes arguments. 
     def visit_FunctionDef(self, node):
         mutatables = []
+        if self.strip_decorators == True:
+            node.decorator_list = []
         linesToCheck = [node.body]
         for lineSet in linesToCheck:
             for item in lineSet:
@@ -95,15 +99,12 @@ class MutantTransformer(ast.NodeTransformer):
                     mutatables.append(item)
                 else:
                     pass#lineSet.append(item.body)
-        if len(mutatables) > 0: node.body.remove(random.choice(mutatables))
+        if self.mutation == 'comment_line':
+            if len(mutatables) > 0: node.body.remove(random.choice(mutatables))
+        elif self.mutation == 'truncate_function':
+            truncation_point = random.randint(0,len(mutatables))
+            node.body = node.body[0:truncation_point]
         return self.generic_visit(node)
-        '''for decorator in node.decorator_list:
-            if 'id' in dir(decorator): decorator_name = decorator.id
-            else:                    decorator_name = decorator.func.id
-            if decorator_name == "mutate_comment_line": 
-                line_commented = self.attempt_comment_node(node)
-                if line_commented == -1: print "Failed to mutate at line " + str(node.lineno)
-                else:                    print "Mutated at line " + str(node.lineno); print "line became: \n" + self.source_lines[node.lineno + line_commented + 1]'''
 
 if __name__ == "__main__":
     with open("test_code_to_mutate.py") as env:
