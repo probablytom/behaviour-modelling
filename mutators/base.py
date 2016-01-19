@@ -93,12 +93,13 @@ class MutantTransformer(ast.NodeTransformer):
         if self.strip_decorators == True:
             node.decorator_list = []
         linesToCheck = [node.body]
-        for lineSet in linesToCheck:
-            for item in lineSet:
-                if not hasattr(item, 'body'):
-                    mutatables.append(item)
-                else:
-                    pass#lineSet.append(item.body)
+# This commented out because I suspect this actually doesn't make us any more secure.
+#         for lineSet in linesToCheck:
+#             for item in lineSet:
+#                 if not hasattr(item, 'body'):
+#                     mutatables.append(item)
+#                 else:
+#                     pass#lineSet.append(item.body)
         if self.mutation == 'comment_line':
             if len(mutatables) > 0: node.body.remove(random.choice(mutatables))
         elif self.mutation == 'truncate_function':

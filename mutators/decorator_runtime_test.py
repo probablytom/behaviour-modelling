@@ -32,10 +32,11 @@ def exec_wrapper(mutant):
 
 @mutate__comment_single_line
 def test_comment():
-    print "the"
-    print "quick"
-    print "brown"
-    print "fox"
+    print 1 
+    print 2 
+    print 3  
+    print 4
+    print 5
 
 @mutate__truncate_function
 def test_truncate():
@@ -43,6 +44,11 @@ def test_truncate():
     print "quick"
     print "brown"
     print "fox"
+    print "jumps"
+    print "over"
+    print "the"
+    print "lazy"
+    print "mutation"
 
 test_comment()
 print
