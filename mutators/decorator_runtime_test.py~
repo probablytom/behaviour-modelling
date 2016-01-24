@@ -2,14 +2,6 @@ from base import *
 import inspect
 
 @mutate__comment_single_line
-def test_comment():
-    print 1 
-    print 2 
-    print 3  
-    print 4
-    print 5
-
-@mutate__truncate_function
 def test_truncate():
     print "the"
     print "quick"
@@ -20,6 +12,14 @@ def test_truncate():
     print "the"
     print "lazy"
     print "mutation"
+
+@mutate__truncate_function
+def test_comment():
+    print 1 
+    print 2 
+    print 3  
+    print 4
+    print 5
 
 test_truncate()
 print

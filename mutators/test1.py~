@@ -1,0 +1,7 @@
+if __name__ == "__main__":
+    import base
+    print base.cache
+    import test2
+else:
+    import base
+    print base.cache
