@@ -13,7 +13,6 @@ class MutantTransformer(ast.NodeTransformer):
     def visit_FunctionDef(self, node):
         random.seed(MutantTransformer.mutants_visited)
         node.name += '_mod'  #  so we don't overwrite Python's object caching
-        print node.name
         if self.strip_decorators == True:
             node.decorator_list = []
         lines_to_check = node.body
@@ -28,13 +27,11 @@ class MutantTransformer(ast.NodeTransformer):
 
 def mutate__comment_single_line(func):
     def wrapper(*args, **kwargs):
-        print func.func_name
         generic_retrieve_mutation((func), 'comment_single_line')(*args, **kwargs)
     return wrapper
 
 def mutate__truncate_function(func):
     def wrapper(*args, **kwargs):
-        print func.func_name
         generic_retrieve_mutation((func), 'truncate_function')(*args, **kwargs)
     return wrapper
 
@@ -49,8 +46,11 @@ def generic_retrieve_mutation(func, mutation_type):
     return mutated_function
 
 def mutate(function, mutation_type = "comment_single_line"):
-    print function.func_name
-    function_source = inspect.getsourcelines(function)[0]  # This is our problem: always gives us the first function.
+    if function in source_cache.keys():
+        function_source = source_cache[function]
+    else:
+        function_source = inspect.getsourcelines(function)[0]  # This is our problem: always gives us the first function.
+        source_cache[function] = function_source  # Cache this source so we can use it again later...
     function_source = ''.join(function_source) + '\n' + function.func_name + '_mod' + '()'
     mutator = MutantTransformer(mutation_type)
     abstract_syntax_tree = ast.parse(function_source)
@@ -61,3 +61,4 @@ def exec_wrapper(mutant):
     exec(mutant)
 
 cache = {}
+source_cache = {}
