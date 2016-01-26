@@ -1,5 +1,0 @@
-import base
-cache.append('test2')
-print cache
-import test1
-
