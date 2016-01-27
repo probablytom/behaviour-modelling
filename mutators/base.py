@@ -50,7 +50,11 @@ def generic_retrieve_mutation(func, mutation_type):
 
 def mutate(function, mutation_type = "comment_single_line"):
     print function.func_name
-    function_source = inspect.getsourcelines(function)[0]  # This is our problem: always gives us the first function.
+    if function in cache.keys():
+        function_source = cache[function]
+    else:
+        function_source = inspect.getsourcelines(function)[0]  # This is our problem: always gives us the first function.
+        cache[function] = function_source
     function_source = ''.join(function_source) + '\n' + function.func_name + '_mod' + '()'
     mutator = MutantTransformer(mutation_type)
     abstract_syntax_tree = ast.parse(function_source)
