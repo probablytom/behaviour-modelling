@@ -1,18 +1,17 @@
 import base, unittest, decorator_runtime_test
+from base import *
 
 class TestMutationRandomness(unittest.TestCase):
     def test_mutation_comment(self):
         decorator_runtime_test.results = [0,0,0]
         decorator_runtime_test.add_15_normal()
         decorator_runtime_test.add_15_comment()
-        print decorator_runtime_test.results
         self.assertNotEqual(decorator_runtime_test.results[0], decorator_runtime_test.results[2])
 
     def test_mutation_truncate(self):
         decorator_runtime_test.results = [0,0,0]
         decorator_runtime_test.add_15_normal()
         decorator_runtime_test.add_15_truncate()
-        print decorator_runtime_test.results
         self.assertNotEqual(decorator_runtime_test.results[1], decorator_runtime_test.results[2])
 
     def test_mutation_randomness(self):
@@ -30,7 +29,7 @@ def mutation_randomness_test0():
     results[0] += 5
 
 @mutate__comment_single_line
-def mutation_randomness_test_result1():
+def mutation_randomness_test1():
     results[1] = 0
     results[1] += 1
     results[1] += 2
