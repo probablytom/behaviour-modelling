@@ -13,7 +13,6 @@ class MutantTransformer(ast.NodeTransformer):
     def visit_FunctionDef(self, node):
         random.seed(MutantTransformer.mutants_visited)
         node.name += '_mod'  #  so we don't overwrite Python's object caching
-        print node.name
         if self.strip_decorators == True:
             node.decorator_list = []
         lines_to_check = node.body
