@@ -1,9 +1,9 @@
-import sys, re, ast, random, ast, codegen, inspect, base, copy
+import sys, re, ast, random, ast, codegen, inspect, base, copy, environment
 from codegen import to_source
 
 class MutantTransformer(ast.NodeTransformer):
 
-    mutants_visited = 0
+    mutants_visited = environment.resources["seed"]
     
     def __init__(self, mutation='comment_single_line', strip_decorators = True):
         self.strip_decorators = strip_decorators
@@ -22,6 +22,9 @@ class MutantTransformer(ast.NodeTransformer):
             truncation_point = random.randint(1,len(lines_to_check) - 1)
             for line in lines_to_check[truncation_point:]:
                 node.body.remove(line)
+        elif self.mutation == 'comment_line_chance_20':
+            if random.randint(0,4) == 0:
+                if len(lines_to_check) > 0: node.body.remove(random.choice(lines_to_check))
         MutantTransformer.mutants_visited += 1
         return self.generic_visit(node)
 
@@ -33,6 +36,11 @@ def mutate__comment_single_line(func):
 def mutate__truncate_function(func):
     def wrapper(*args, **kwargs):
         generic_retrieve_mutation((func), 'truncate_function')(*args, **kwargs)
+    return wrapper
+
+def mutate__comment_line_chance_20(func):
+    def wrapper(*args, **kwargs):
+        generic_retrieve_mutation((func), 'comment_line_chance_20')(*args, **kwargs)
     return wrapper
 
 def generic_retrieve_mutation(func, mutation_type):

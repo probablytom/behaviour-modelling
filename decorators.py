@@ -1,12 +1,19 @@
 from environment import resources
+import base
 
 def atom(func):
     def wrapper(*args, **kwargs):
         if precondition():
-            print "Running decorator"
+            #base.generic_retrieve_mutation(func, 'comment_single_line')(*args, **kwargs)
             func(*args, **kwargs)
-            post_function_sequence(**kwargs)
+#             post_function_sequence(**kwargs)
     
+    return wrapper
+
+def flow(func):
+    def wrapper(*args, **kwargs):
+        if precondition():
+            func(*args, **kwargs)
     return wrapper
 
 # to be run after every function, say, to decrease money in a budget.
@@ -47,3 +54,4 @@ def mutate_ignore(func):
     def wrapper(*args, **kwargs):
         func(*args, **kwargs)
     return wrapper
+

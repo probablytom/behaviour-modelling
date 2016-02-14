@@ -19,6 +19,8 @@ resources["number of bugs added this iteration"] = 0
 resources["tests to squash bug passing"] = False
 resources["number of failing tests this iteration"] = 0
 resources["current test passing"] = True
+resources["features implemented"] = 0
+resources["seed"] = 0
 
 # Should the number of tickets also be a record of bugs? (I'm inclined to say no)
 
