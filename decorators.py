@@ -1,5 +1,4 @@
-from environment import resources
-import base
+import base, environment
 
 def atom(func):
     def wrapper(*args, **kwargs):
@@ -18,17 +17,28 @@ def flow(func):
 
 # to be run after every function, say, to decrease money in a budget.
 def post_function_sequence(kwargs):
-    print "post_func"
     for key, value in kwargs.iteritems():
-        resources[key] += value  # If we're only using integers?!
+        environment.resources[key] += value  # If we're only using integers?!
         print key, value
+
+def system_setup(func):
+    def wrapper(*args, **kwargs):
+        func(*args, **kwargs)  # Run setup functions no matter what...
+    return wrapper
+
+def metric(func):
+    def wrapper(*args, **kwargs):
+        if metric_successful():
+            func(*args, **kwargs)
+    return wrapper
 
 # A boolean function that tells you whether you should be running the function passed into the decorator or not. 
 # This should be a bool for any implementation of the system. 
 def precondition():
-    return resources["money"] >= 0
+    return environment.resources["money"] >= 0
 
-
+def metric_successful():
+    return environment.resources["money"] >= 0
 
 class atom_args(object):
     def __init__(self, **kwargs):
@@ -36,7 +46,6 @@ class atom_args(object):
 
     def __call__(self, func):
         def wrap(*args):
-
             if precondition():
                 func(*args)
                 post_function_sequence(self.modifications)

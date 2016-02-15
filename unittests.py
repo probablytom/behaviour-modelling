@@ -31,14 +31,14 @@ class TestMutationRandomness(unittest.TestCase):
 
 class TestModelEmergentPhenomena(unittest.TestCase):
     def test_model_instances(self):
-        initial_environment = environment.resources
+        flows.setup_environment()
         flows.implement_50_features()
         first_results = environment.resources
-        environment.resources = initial_environment
-        environment.resources["seed"] = 100  # Change the seed so we're changing the mutations.
+        flows.setup_environment()
+        environment.resources["seed"] = 1000  # Change the seed so we're changing the mutations.
         flows.implement_50_features()
         second_results = environment.resources
-        self.assertNotEqual(first_results, second_results)
+        self.assertNotEqual(first_results["features implemented"], second_results["features implemented"])
 
 @mutate__comment_single_line
 def mutation_randomness_test():

@@ -1,7 +1,7 @@
 from software_engineering_atoms import *
-from environment import resources
 from base import *
-from decorators import flow
+from decorators import flow, system_setup, metric
+import environment
 
 @flow
 @mutate__comment_line_chance_20
@@ -19,20 +19,20 @@ def attempt_to_squash_bug():
 @mutate__truncate_function
 def squash_a_discovered_bug():
     begin_to_squash_bug()
-    initial_problem_count = resources["number of failing tests this iteration"]
-    if initial_problem_count == resources["number of failing tests this iteration"]:
+    initial_problem_count = environment.resources["number of failing tests this iteration"]
+    if initial_problem_count == environment.resources["number of failing tests this iteration"]:
         attempt_to_squash_bug()
     
 
 @flow
 def fix_failing_tests():
-    if resources["number of tests failing this iteration"] > 0:
+    if environment.resources["number of tests failing this iteration"] > 0:
         squash_a_discovered_bug()
         fix_failing_tests()
 
 @flow
 def check_code_is_working():
-    if not resources["tests passing"]:
+    if not environment.resources["tests passing"]:
         modify_code()
         check_code_is_working()
 
@@ -44,20 +44,20 @@ def implement_feature_using_ttd():
 @flow
 def perform_integration_testing():
     integration_test()
-    if not resources["integration tests passing"]:
+    if not environment.resources["integration tests passing"]:
         modify_code()
         perform_integration_testing()
 
 @flow
 def perform_user_acceptance_testing():
     user_acceptance_test()
-    if not resources["user acceptance tests passing"]:
+    if not environment.resources["user acceptance tests passing"]:
         make_changes()
 
 @flow
 def deploy():
     attempt_deployment()
-    if not resources["successful deployment"]:
+    if not environment.resources["successful deployment"]:
         perform_integration_testing()
         deploy()  # see note 1
 
@@ -85,8 +85,40 @@ def make_changes():
 def implement_50_features():
     for i in range(50):
         implement_new_feature()
-        resources["features implemented"] += 1
-        print "feature " + str(i) + " implemented..."
+        additional_metric_evaluated()
+
+@metric
+def additional_metric_evaluated():
+    environment.resources["features implemented"] += 1
+
+@system_setup
+def setup_environment():
+# The environment.resources we'll be editing
+# NOTE: These should ordinarily be amended to reflect the initial state of the project...
+    environment.resources = {}
+    environment.resources["stress"] = 0.05
+    environment.resources["money"] = 1000000
+    environment.resources["tests passing"] = False
+    environment.resources["integration tests passing"] = False
+    environment.resources["user acceptance tests passing"] = False
+    environment.resources["successful deployment"] = False
+    environment.resources["tickets"] = 0
+    environment.resources["branches"] = 1
+    environment.resources["probability of bug being detected"] = 0.9
+    environment.resources["number of tests"] = 0
+    environment.resources["number of hidden bugs"] = 0
+    environment.resources["number of bugs"] = 0
+    environment.resources["lines of code"] = 1000  # We start with a fairly small codebase
+    environment.resources["number of bugs added this iteration"] = 0
+    environment.resources["tests to squash bug passing"] = False
+    environment.resources["number of failing tests this iteration"] = 0
+    environment.resources["current test passing"] = True
+    environment.resources["features implemented"] = 0
+    environment.resources["seed"] = 0
+# Should the number of tickets also be a record of bugs? (I'm inclined to say no)
+
+def estimate_bugs():
+    return environment.resources["lines of code"] / 15  # each 15 lines of code roughly causes a bug?
 
 '''
 NOTE 1
