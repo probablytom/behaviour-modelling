@@ -35,7 +35,10 @@ def metric(func):
 # A boolean function that tells you whether you should be running the function passed into the decorator or not. 
 # This should be a bool for any implementation of the system. 
 def precondition():
-    return environment.resources["money"] >= 0
+    result = environment.resources["money"] >= 0
+    if not result: 
+        raise base.ResourcesExpendedException()
+    return result
 
 def metric_successful():
     return environment.resources["money"] >= 0

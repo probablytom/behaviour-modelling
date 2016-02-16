@@ -84,6 +84,7 @@ def make_changes():
 @flow
 def implement_50_features():
     for i in range(50):
+        print i
         implement_new_feature()
         additional_metric_evaluated()
 

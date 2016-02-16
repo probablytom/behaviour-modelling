@@ -65,4 +65,8 @@ def mutate(function, mutation_type = "comment_single_line"):
 def exec_wrapper(mutant):
     exec(mutant)
 
+class ResourcesExpendedException(Exception):
+        pass
+
+
 cache = {}
