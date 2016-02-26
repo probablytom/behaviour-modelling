@@ -11,7 +11,8 @@ class MutantTransformer(ast.NodeTransformer):
 
     #NOTE: This will work differently depending on whether the decorator takes arguments. 
     def visit_FunctionDef(self, node):
-        random.seed(MutantTransformer.mutants_visited)
+        if environment.resources["mutating"]==False: return self.generic_visit(node)
+        random.seed(environment.resources["seed"])
         node.name += '_mod'  #  so we don't overwrite Python's object caching
         if self.strip_decorators == True:
             node.decorator_list = []
@@ -26,6 +27,7 @@ class MutantTransformer(ast.NodeTransformer):
             if random.randint(0,4) == 0:
                 if len(lines_to_check) > 0: node.body.remove(random.choice(lines_to_check))
         MutantTransformer.mutants_visited += 1
+        environment.resources["seed"] += 1
         return self.generic_visit(node)
 
 def mutate__comment_single_line(func):

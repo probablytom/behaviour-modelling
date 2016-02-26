@@ -3,37 +3,45 @@ from base import *
 
 
 class TestMutationRandomness(unittest.TestCase):
-    def test_mutation_comment(self):
+    def test_mutation_comment_mutates(self):
         decorator_runtime_test.results = [0,0,0]
         decorator_runtime_test.add_15_normal()
         decorator_runtime_test.add_15_comment()
         self.assertNotEqual(decorator_runtime_test.results[0], decorator_runtime_test.results[2])
 
-    def test_mutation_truncate(self):
+    def test_mutation_truncate_mutates(self):
         decorator_runtime_test.results = [0,0,0]
         decorator_runtime_test.add_15_normal()
         decorator_runtime_test.add_15_truncate()
         self.assertNotEqual(decorator_runtime_test.results[1], decorator_runtime_test.results[2])
 
-    def test_mutation_randomness(self):
-        random.seed(20)
-        mutation_randomness_test()
-        first_result = results[0]
-        random.seed(0)
-        mutation_randomness_test()
-        second_result = results[0]
-        self.assertNotEqual(first_result, second_result)
-
     def test_mutation_truncation(self):
-        mutation_truncation_example()
-        first_result = results[1]
-        mutation_truncation_example()
-        second_result = results[1]
-        self.assertNotEqual(first_result, second_result)
+        decorator_runtime_test.add_15_truncate()
+        result1 = copy.copy(decorator_runtime_test.results)
+        decorator_runtime_test.add_15_truncate()
+        result2 = copy.copy(decorator_runtime_test.results)
+        self.assertNotEqual(result1, result2)
 
 class TestModelEmergentPhenomena(unittest.TestCase):
     def test_model_instances(self):
         flows.setup_environment()
+        try:
+            flows.implement_50_features()
+        except:
+            pass
+        first_results = environment.resources
+        flows.setup_environment()
+        environment.resources["seed"] = 12345  # Change the seed so we're changing the mutations.
+        try:
+            flows.implement_50_features()
+        except:
+            pass
+        second_results = environment.resources
+        self.assertNotEqual(first_results["features implemented"], second_results["features implemented"])
+
+    def test_model_agile_stress_test(self):
+        flows.setup_environment()
+        environment.resources["mutating"] == False
         try:
             flows.implement_50_features()
         except:
@@ -46,7 +54,6 @@ class TestModelEmergentPhenomena(unittest.TestCase):
         except:
             pass
         second_results = environment.resources
-        print first_results, '\n', second_results
         self.assertNotEqual(first_results["features implemented"], second_results["features implemented"])
 
 @mutate__comment_single_line

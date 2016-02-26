@@ -115,6 +115,7 @@ def setup_environment():
     environment.resources["current test passing"] = True
     environment.resources["features implemented"] = 0
     environment.resources["seed"] = 0
+    environment.resources["mutating"] = True
 # Should the number of tickets also be a record of bugs? (I'm inclined to say no)
 
 def estimate_bugs():

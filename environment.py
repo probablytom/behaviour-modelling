@@ -21,7 +21,7 @@ resources["number of failing tests this iteration"] = 0
 resources["current test passing"] = True
 resources["features implemented"] = 0
 resources["seed"] = 0
-
+resources["mutating"] = True
 # Should the number of tickets also be a record of bugs? (I'm inclined to say no)
 
 def estimate_bugs():
