@@ -15,7 +15,7 @@ class TestMutationRandomness(unittest.TestCase):
         decorator_runtime_test.add_15_truncate()
         self.assertNotEqual(decorator_runtime_test.results[1], decorator_runtime_test.results[2])
 
-    def test_mutation_truncation(self):
+    def test_mutation_randomness(self):
         decorator_runtime_test.add_15_truncate()
         result1 = copy.copy(decorator_runtime_test.results)
         decorator_runtime_test.add_15_truncate()
