@@ -84,7 +84,6 @@ def make_changes():
 @flow
 def implement_50_features():
     for i in range(50):
-        print i
         implement_new_feature()
         additional_metric_evaluated()
 
@@ -98,7 +97,7 @@ def setup_environment():
 # NOTE: These should ordinarily be amended to reflect the initial state of the project...
     environment.resources = {}
     environment.resources["stress"] = 0.05
-    environment.resources["money"] = 1000000
+    environment.resources["time"] = 1000
     environment.resources["tests passing"] = False
     environment.resources["integration tests passing"] = False
     environment.resources["user acceptance tests passing"] = False

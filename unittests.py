@@ -1,4 +1,4 @@
-import base, unittest, decorator_runtime_test, environment, flows
+import base, unittest, decorator_runtime_test, environment, flows, sys
 from base import *
 
 
@@ -16,8 +16,10 @@ class TestMutationRandomness(unittest.TestCase):
         self.assertNotEqual(decorator_runtime_test.results[1], decorator_runtime_test.results[2])
 
     def test_mutation_randomness(self):
+        random.seed(20)
         mutation_randomness_test()
         first_result = results[0]
+        random.seed(0)
         mutation_randomness_test()
         second_result = results[0]
         self.assertNotEqual(first_result, second_result)
@@ -44,6 +46,7 @@ class TestModelEmergentPhenomena(unittest.TestCase):
         except:
             pass
         second_results = environment.resources
+        print first_results, '\n', second_results
         self.assertNotEqual(first_results["features implemented"], second_results["features implemented"])
 
 @mutate__comment_single_line
@@ -67,4 +70,5 @@ def mutation_truncation_example():
 results = [0, 0, 0]
 
 if __name__ == "__main__":
+    sys.setrecursionlimit(100000)
     unittest.main(verbosity = 2)

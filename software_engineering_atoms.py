@@ -62,7 +62,7 @@ def begin_to_squash_bug():
 @atom
 def write_code_to_fix_bug():
     log.log_line("Writing code to fix bugs")
-    environment.resources["money"] -= 50
+    environment.resources["time"] -= 1
     environment.resources["stress"] += 0.05
     number_of_new_lines_of_code = estimate_lines_written() / 2
     environment.resources["lines of code"] += number_of_new_lines_of_code
@@ -83,7 +83,7 @@ def run_tests_on_bug():
         pass
     environment.resources["tests passing"] = (environment.resources["number of failing tests this iteration"] == 0)
 
-#@atom_args(money=-100, stress=0.1)
+#@atom_args(time=-3, stress=0.1)
 @atom
 def write_tests():
     log.log_line("Writing tests")
@@ -92,7 +92,7 @@ def write_tests():
 @atom
 def write_code():
     log.log_line("Writing code")
-    environment.resources["money"] -= 100
+    environment.resources["time"] -= 2
     environment.resources["stress"] += 0.05
     number_of_new_lines_of_code = estimate_lines_written()
     number_of_bugs_added = number_of_new_bugs_in_lines(number_of_new_lines_of_code)
@@ -105,7 +105,7 @@ def run_tests():
     log.log_line("Running tests against code")
     for test in range(0, environment.resources["number of tests"]):
         environment.resources["current test passing"] = True if probability_of_bug_being_detected() > 0.15 else False
-        environment.resources["money"] -= 100
+        environment.resources["time"] -= 0
         if environment.resources["current test passing"]:
             log.log_line("\t- Tests successful!")
             environment.resources["stress"] -= 0.1
@@ -119,7 +119,7 @@ def run_tests():
 @atom
 def integration_test():
     log.log_line("Running integration test")
-    environment.resources["money"] -= 100
+    environment.resources["time"] -= 2
     environment.resources["integration tests passing"] = random_boolean()
 
 @atom
@@ -138,14 +138,14 @@ def determine_whether_integration_tests_running():
 def merge():
     log.log_line("Merging branch against codebase")
     environment.resources["branches"] -= 1
-    environment.resources["money"] -= 100
+    environment.resources["time"] -= 3
     environment.resources["stress"] += 0.05  # Because merging is always stressful, particularly with a large codebase. 
     # Perhaps this should scale to some "changes made" resource that gets incremented by the code and test writing?
 
 @atom
 def user_acceptance_test():
     log.log_line("Performing user acceptance tests")
-    environment.resources["money"] -= 100
+    environment.resources["time"] -= 3
     environment.resources["user acceptance tests passing"] = random_boolean()
     if environment.resources["user acceptance tests passing"]:
         log.log_line("\t- Test successful!")
@@ -159,7 +159,7 @@ def user_acceptance_test():
 def attempt_deployment():
     log.log_line("Deploying product")
     environment.resources["stress"] += 0.1
-    environment.resources["money"] -= 100
+    environment.resources["time"] -= 2
     environment.resources["successful deployment"] = random_boolean()
     if environment.resources["successful deployment"]:
         log.log_line("\t- Deployment successful!")

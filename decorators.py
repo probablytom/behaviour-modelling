@@ -15,7 +15,7 @@ def flow(func):
             func(*args, **kwargs)
     return wrapper
 
-# to be run after every function, say, to decrease money in a budget.
+# to be run after every function, say, to decrease time in a budget.
 def post_function_sequence(kwargs):
     for key, value in kwargs.iteritems():
         environment.resources[key] += value  # If we're only using integers?!
@@ -35,13 +35,13 @@ def metric(func):
 # A boolean function that tells you whether you should be running the function passed into the decorator or not. 
 # This should be a bool for any implementation of the system. 
 def precondition():
-    result = environment.resources["money"] >= 0
+    result = environment.resources["time"] >= 0
     if not result: 
         raise base.ResourcesExpendedException()
     return result
 
 def metric_successful():
-    return environment.resources["money"] >= 0
+    return environment.resources["time"] >= 0
 
 class atom_args(object):
     def __init__(self, **kwargs):

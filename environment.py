@@ -2,7 +2,7 @@
 # NOTE: These should ordinarily be amended to reflect the initial state of the project...
 resources = {}
 resources["stress"] = 0.05
-resources["money"] = 1000000
+resources["time"] = 1000
 resources["tests passing"] = False
 resources["integration tests passing"] = False
 resources["user acceptance tests passing"] = False
