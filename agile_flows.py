@@ -20,8 +20,8 @@ def attempt_to_squash_bug():
 def squash_a_discovered_bug():
     begin_to_squash_bug()
     initial_problem_count = environment.resources["number of failing tests this iteration"]
-    if initial_problem_count == environment.resources["number of failing tests this iteration"]:
-        attempt_to_squash_bug()
+    #if initial_problem_count == environment.resources["number of failing tests this iteration"]:
+    attempt_to_squash_bug()
     
 
 @flow
@@ -104,7 +104,8 @@ def setup_environment():
     environment.resources["successful deployment"] = False
     environment.resources["tickets"] = 0
     environment.resources["branches"] = 1
-    environment.resources["probability of bug being detected"] = 0.9
+    environment.resources["probability of bug being detected"] = environment.probability_of_bug_detection
+
     environment.resources["number of tests"] = 0
     environment.resources["number of hidden bugs"] = 0
     environment.resources["number of bugs"] = 0
@@ -116,6 +117,7 @@ def setup_environment():
     environment.resources["features implemented"] = 0
     environment.resources["seed"] = 0
     environment.resources["mutating"] = True
+    environment.resources["average test coverage in lines of code"] = 10
 # Should the number of tickets also be a record of bugs? (I'm inclined to say no)
 
 def estimate_bugs():

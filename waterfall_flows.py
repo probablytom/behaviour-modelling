@@ -3,94 +3,6 @@ from base import *
 from decorators import flow, system_setup, metric
 import environment
 
-@flow
-@mutate__comment_line_chance_20
-def modify_code():
-    write_tests()
-    write_code()
-    run_tests()
-
-@flow
-def attempt_to_squash_bug():
-    write_code_to_fix_bug()
-    run_tests_on_bug()
-
-@flow
-@mutate__truncate_function
-def squash_a_discovered_bug():
-    begin_to_squash_bug()
-    initial_problem_count = environment.resources["number of failing tests this iteration"]
-    if initial_problem_count == environment.resources["number of failing tests this iteration"]:
-        attempt_to_squash_bug()
-    
-
-@flow
-def fix_failing_tests():
-    if environment.resources["number of tests failing this iteration"] > 0:
-        squash_a_discovered_bug()
-        fix_failing_tests()
-
-@flow
-def check_code_is_working():
-    if not environment.resources["tests passing"]:
-        modify_code()
-        check_code_is_working()
-
-@flow
-def implement_feature_using_ttd():
-    modify_code()
-    check_code_is_working()
-
-@flow
-def perform_integration_testing():
-    integration_test()
-    if not environment.resources["integration tests passing"]:
-        modify_code()
-        perform_integration_testing()
-
-@flow
-def perform_user_acceptance_testing():
-    user_acceptance_test()
-    if not environment.resources["user acceptance tests passing"]:
-        make_changes()
-
-@flow
-def deploy():
-    attempt_deployment()
-    if not environment.resources["successful deployment"]:
-        perform_integration_testing()
-        deploy()  # see note 1
-
-@flow
-def finish_feature_implementation():
-    gather_statistics_and_log()
-
-@flow
-def implement_new_feature():
-    create_ticket()
-    create_branch()
-    make_changes()
-
-@flow
-def make_changes():
-    checkout_branch()
-    implement_feature_using_ttd()
-    merge()
-    perform_integration_testing()
-    perform_user_acceptance_testing()
-    deploy()
-    finish_feature_implementation()
-
-@flow
-def implement_50_features():
-    for i in range(50):
-        implement_new_feature()
-        additional_metric_evaluated()
-
-@metric
-def additional_metric_evaluated():
-    environment.resources["features implemented"] += 1
-
 @system_setup
 def setup_environment():
 # The environment.resources we'll be editing
@@ -104,7 +16,7 @@ def setup_environment():
     environment.resources["successful deployment"] = False
     environment.resources["tickets"] = 0
     environment.resources["branches"] = 1
-    environment.resources["probability of bug being detected"] = 0.9
+    environment.resources["probability of bug being detected"] = environment.probability_of_bug_detection
     environment.resources["number of tests"] = 0
     environment.resources["number of hidden bugs"] = 0
     environment.resources["number of bugs"] = 0
@@ -116,7 +28,72 @@ def setup_environment():
     environment.resources["features implemented"] = 0
     environment.resources["seed"] = 0
     environment.resources["mutating"] = True
+    environment.resources["average test coverage in lines of code"] = 10
 # Should the number of tickets also be a record of bugs? (I'm inclined to say no)
+
+@flow
+def implement_feature():
+    write_code()
+
+@flow
+def coding():
+    # Implements 10 features
+    for i in range(0, 10):
+        implement_feature()
+
+@flow
+def unit_test():
+    write_tests()
+    run_tests()
+    if environment.resources["tests passing"] == False:
+        debug()
+        unit_test()
+
+@flow
+def debug():
+    write_code()
+    run_tests()
+
+@mutate__comment_line_chance_20
+@flow
+def integration_testing():
+    run_integration_tests()
+    if environment.resources["integration tests passing"]:
+        unit_test()
+        integration_testing()
+
+@flow
+def test():
+    print "UA testing"
+    user_acceptance_test()
+    while not environment.resources["user acceptance tests passing"]:
+        print "UA failed"
+        reimplement_feature()
+        unit_test()
+        integration_test()
+        user_acceptance_test()
+
+@flow
+def reimplement_feature():
+    write_code()
+
+# Implements 10 features
+@flow
+def create_major_version():
+    print "implementing feature"
+    coding()
+    print "unit testing"
+    unit_test()
+    print "integration testing"
+    integration_test()
+    print "test"
+    test()
+
+@flow
+def implement_50_features():
+    for i in range(0, 5):
+        create_major_version()
+        environment.resources["features implemented"] += 10
 
 def estimate_bugs():
     return environment.resources["lines of code"] / 15  # each 15 lines of code roughly causes a bug?

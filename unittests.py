@@ -1,4 +1,4 @@
-import base, unittest, decorator_runtime_test, environment, flows, sys
+import base, unittest, decorator_runtime_test, environment, flows, sys, agile_flows, waterfall_flows
 from base import *
 
 
@@ -22,7 +22,7 @@ class TestMutationRandomness(unittest.TestCase):
         result2 = copy.copy(decorator_runtime_test.results)
         self.assertNotEqual(result1, result2)
 
-class TestModelEmergentPhenomena(unittest.TestCase):
+class TestModel(unittest.TestCase):
     def test_model_instances(self):
         flows.setup_environment()
         try:
@@ -40,21 +40,57 @@ class TestModelEmergentPhenomena(unittest.TestCase):
         self.assertNotEqual(first_results["features implemented"], second_results["features implemented"])
 
     def test_model_agile_stress_test(self):
-        flows.setup_environment()
+        agile_flows.setup_environment()
         environment.resources["mutating"] == False
         try:
-            flows.implement_50_features()
+            agile_flows.implement_50_features()
         except:
             pass
         first_results = environment.resources
-        flows.setup_environment()
-        environment.resources["seed"] = 1000  # Change the seed so we're changing the mutations.
+        agile_flows.setup_environment()
+        environment.resources["seed"] = 5000  # Change the seed so we're changing the mutations.
         try:
-            flows.implement_50_features()
+            agile_flows.implement_50_features()
+        except:
+            pass
+        second_results = environment.resources
+        print first_results["features implemented"], second_results["features implemented"]
+        self.assertNotEqual(first_results["features implemented"], second_results["features implemented"])
+
+    def test_model_waterfall_stress_test(self):
+        waterfall_flows.setup_environment()
+        environment.resources["mutating"] == False
+        try:
+            waterfall_flows.implement_50_features()
+        except:
+            pass
+        first_results = environment.resources
+        waterfall_flows.setup_environment()
+        environment.resources["seed"] = 5000  # Change the seed so we're changing the mutations.
+        try:
+            waterfall_flows.implement_50_features()
         except:
             pass
         second_results = environment.resources
         self.assertNotEqual(first_results["features implemented"], second_results["features implemented"])
+
+    def test_compare_waterfall_vs_agile(self):
+        agile_flows.setup_environment()
+        environment.resources["mutating"] == False
+        try:
+            agile_flows.implement_50_features()
+        except:
+            pass
+        first_results = environment.resources
+        waterfall_flows.setup_environment()
+        environment.resources["seed"] = 5000  # Change the seed so we're changing the mutations.
+        try:
+            waterfall_flows.implement_50_features()
+        except:
+            pass
+        second_results = environment.resources
+        self.assertGreater(first_results["features implemented"], second_results["features implemented"])
+
 
 @mutate__comment_single_line
 def mutation_randomness_test():
