@@ -81,6 +81,7 @@ def run_tests_on_bug():
 def write_tests():
     log.log_line("Writing tests")
     environment.resources["number of tests"] += 1
+    environment.resources["time"] -= 1
 
 @atom
 def write_code():
@@ -88,17 +89,18 @@ def write_code():
     environment.resources["time"] -= 2
     environment.resources["stress"] += 0.05
     number_of_new_lines_of_code = estimate_lines_written()
-    number_of_bugs_added = number_of_new_bugs_in_lines(number_of_new_lines_of_code)
+    number_of_bugs_added = number_of_new_bugs_in_lines(abs(number_of_new_lines_of_code))
     environment.resources["lines of code"] += number_of_new_lines_of_code
     environment.resources["number of hidden bugs"] += number_of_bugs_added
     environment.resources["number of bugs"] += number_of_bugs_added
+    environment.resources["number of failing tests this iteration"] += number_of_bugs_added
     environment.resources["number of bugs added this iteration"] += number_of_bugs_added
     
+@atom
 def run_tests():
     log.log_line("Running tests against code")
     for bug in range(0, environment.resources["number of failing tests this iteration"]):
         environment.resources["current test passing"] = True if probability_of_bug_being_detected() > 0.15 else False
-        environment.resources["time"] -= 0
         if environment.resources["current test passing"]:
             log.log_line("\t- Tests successful!")
             environment.resources["stress"] -= 0.1
@@ -107,7 +109,6 @@ def run_tests():
             log.log_line("\t- Tests unsuccessful")
             log.log_line("\t- Rewriting tests")
             environment.resources["stress"] += 0.05
-            environment.resources["number of failing tests this iteration"] += 1
     environment.resources["tests passing"] = (environment.resources["number of failing tests this iteration"] == 0)
 
 @atom
@@ -139,10 +140,8 @@ def merge():
 @atom
 def user_acceptance_test():
     log.log_line("Performing user acceptance tests")
-    print "UA test"
     environment.resources["time"] -= 3
     environment.resources["user acceptance tests passing"] = random_boolean()
-    print "user acceptance tests came out ", environment.resources["user acceptance tests passing"]
     if environment.resources["user acceptance tests passing"]:
         log.log_line("\t- Test successful!")
         environment.resources["stress"] -= 0.05

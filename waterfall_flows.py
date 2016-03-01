@@ -64,10 +64,8 @@ def integration_testing():
 
 @flow
 def test():
-    print "UA testing"
     user_acceptance_test()
     while not environment.resources["user acceptance tests passing"]:
-        print "UA failed"
         reimplement_feature()
         unit_test()
         integration_test()
@@ -80,13 +78,9 @@ def reimplement_feature():
 # Implements 10 features
 @flow
 def create_major_version():
-    print "implementing feature"
     coding()
-    print "unit testing"
     unit_test()
-    print "integration testing"
     integration_test()
-    print "test"
     test()
 
 @flow

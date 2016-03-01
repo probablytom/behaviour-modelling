@@ -42,7 +42,6 @@ def mutate__truncate_function(func):
 
 def mutate__comment_line_chance_20(func):
     def wrapper(*args, **kwargs):
-        print "env time is ", environment.resources["time"]
         generic_retrieve_mutation((func), 'comment_line_chance_20')(*args, **kwargs)
     return wrapper
 

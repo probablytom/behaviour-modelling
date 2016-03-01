@@ -52,14 +52,14 @@ def perform_integration_testing():
 def perform_user_acceptance_testing():
     user_acceptance_test()
     if not environment.resources["user acceptance tests passing"]:
-        make_changes()
+        make_changes_without_deployment()
 
 @flow
 def deploy():
     attempt_deployment()
     if not environment.resources["successful deployment"]:
         perform_integration_testing()
-        deploy()  # see note 1
+        attempt_deployment()  # see note 1
 
 @flow
 def finish_feature_implementation():
@@ -72,6 +72,20 @@ def implement_new_feature():
     make_changes()
 
 @flow
+def implement_new_feature_without_deployment():
+    create_ticket()
+    create_branch()
+    make_changes_without_deployment()
+
+@flow
+def deploy_many_features():
+    perform_integration_testing()
+    perform_user_acceptance_testing()
+    deploy()
+    finish_feature_implementation()
+
+
+@flow
 def make_changes():
     checkout_branch()
     implement_feature_using_ttd()
@@ -82,14 +96,26 @@ def make_changes():
     finish_feature_implementation()
 
 @flow
+def make_changes_without_deployment():
+    checkout_branch()
+    implement_feature_using_ttd()
+    merge()
+
+@flow
 def implement_50_features():
-    for i in range(50):
-        implement_new_feature()
-        additional_metric_evaluated()
+    for i in range(5):
+        implement_10_features()
+
+@flow
+def implement_10_features():
+    for i in range(10):
+        implement_new_feature_without_deployment()
+        additional_metric_evaluated(1)
+    deploy_many_features()
 
 @metric
-def additional_metric_evaluated():
-    environment.resources["features implemented"] += 1
+def additional_metric_evaluated(n = 1):
+    environment.resources["features implemented"] += n
 
 @system_setup
 def setup_environment():
