@@ -124,29 +124,14 @@ def setup_environment():
 # The environment.resources we'll be editing
 # NOTE: These should ordinarily be amended to reflect the initial state of the project...
     environment.resources = {}
-    environment.resources["stress"] = 0.05
     environment.resources["time"] = 200
-    environment.resources["tests passing"] = False
+    environment.resources["seed"] = 0
     environment.resources["integration tests passing"] = False
     environment.resources["user acceptance tests passing"] = False
     environment.resources["successful deployment"] = False
-    environment.resources["tickets"] = 0
-    environment.resources["branches"] = 1
-    environment.resources["probability of bug being detected"] = environment.probability_of_bug_detection
-
-    environment.resources["number of tests"] = 25
-    environment.resources["number of hidden bugs"] = 0
-    environment.resources["number of bugs"] = 0
-    environment.resources["lines of code"] = 1000  # We start with a fairly small codebase
-    environment.resources["number of bugs added this iteration"] = 0
-    environment.resources["tests to squash bug passing"] = False
-    environment.resources["number of failing tests this iteration"] = 0
-    environment.resources["current test passing"] = True
-    environment.resources["features implemented"] = 0
-    environment.resources["seed"] = 0
+    environment.resources["code"] = []  # To be a list of Chunk objects
+    environment.resources["bugs"] = []  # To be a list of Bug objects
     environment.resources["mutating"] = True
-    environment.resources["average test coverage in lines of code"] = 30
-# Should the number of tickets also be a record of bugs? (I'm inclined to say no)
 
 def estimate_bugs():
     return environment.resources["lines of code"] / 15  # each 15 lines of code roughly causes a bug?
