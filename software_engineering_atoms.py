@@ -17,7 +17,9 @@ def random_boolean():
 
 # Note: this is specifically for detecting a hidden bug! I think this is all we need for bug-detection-probability-things
 def probability_of_bug_being_detected():
-    return environment.resources["probability of bug being detected"]()
+    #     return environment.resources["probability of bug being detected"]()
+    return 1 if bug_discovered_by_current_test_suite else 0
+    
 
 
 # We write up to 20 lines of code, or remove up to 10
@@ -28,6 +30,11 @@ def estimate_lines_written():
 # Finding out how many bugs are in a collection of fresh lines of code
 def number_of_new_bugs_in_lines(number_of_lines):
     return number_of_lines / 15
+
+def bug_discovered_by_current_test_suite():
+    uncoverage_rate = 1 - environment.coverage_rate()
+    bug_distribution = float(environment.resources["lines of code"]) / environment.resources["number of bugs"]
+    return uncoverage_rate*environment.resources["lines of code"] < bug_distribution
 
 
 # -----------------------------------------------------------------------------

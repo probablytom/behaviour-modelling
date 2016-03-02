@@ -134,7 +134,7 @@ def setup_environment():
     environment.resources["branches"] = 1
     environment.resources["probability of bug being detected"] = environment.probability_of_bug_detection
 
-    environment.resources["number of tests"] = 0
+    environment.resources["number of tests"] = 25
     environment.resources["number of hidden bugs"] = 0
     environment.resources["number of bugs"] = 0
     environment.resources["lines of code"] = 1000  # We start with a fairly small codebase
@@ -145,31 +145,37 @@ def setup_environment():
     environment.resources["features implemented"] = 0
     environment.resources["seed"] = 0
     environment.resources["mutating"] = True
-    environment.resources["average test coverage in lines of code"] = 10
+    environment.resources["average test coverage in lines of code"] = 30
 # Should the number of tickets also be a record of bugs? (I'm inclined to say no)
 
 def estimate_bugs():
     return environment.resources["lines of code"] / 15  # each 15 lines of code roughly causes a bug?
 
+@flow
 def write_code_using_tdd():
     write_tests()
     modify_code()
 
+@flow
+@mutate__comment_line_chance_20
 def make_code_edit():
     write_code()
     run_tests()
 
+@flow
 def modify_code():
     make_code_edit()
     while not environment.resources["tests passing"]:
         make_code_edit()
 
+@flow
 def integration_testing_phase():
     integration_test()
     while not environment.resources["integration tests passing"]:
         modify_code()
         integration_test()
 
+@flow
 def testing():
     user_acceptance_test()
     while not environment.resources["user acceptance tests passing"]:
@@ -177,12 +183,17 @@ def testing():
         integration_testing_phase()
         user_acceptance_test()
 
+@flow
 def implement_feature():
     write_code_using_tdd()
     integration_testing_phase()
     user_acceptance_test()
 
-
+@flow
+def implement_50_features():
+    for i in range(50):
+        implement_feature()
+        environment.resources["features implemented"] += 1
 
 '''
 NOTE 1
