@@ -11,18 +11,26 @@ class Vertex:
     def adjacences(self):
         return self.adj
 
+'''
+    The chunks a bug affects are its adjacent vertices
+    i.e. if a bug applies to a chunk, add the chunk as an adjacent vertex
+'''
 class Bug(Vertex):
     pass
 
+'''
+    The bugs a chunk's tests will detect are the adjacent vertices
+    i.e. if a chunk detects a bug, add the bug as an adjacent vertex
+'''
 class Chunk(Vertex):
 
     def __init__(self):
-        super(Vertex, self).__init__()
+        Vertex.__init__(self)
         self.tested = False
+        self.detects = []
 
     def is_tested(self):
         return self.tested
 
     def set_tested(self, tested):
         self.tested = tested
-
