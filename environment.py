@@ -12,7 +12,7 @@ def coverage_rate():
 
 
 resources = {}
-resources["time"] = 200
+resources["time"] = 0
 resources["seed"] = 0
 resources["integration tests passing"] = False
 resources["user acceptance tests passing"] = False
@@ -20,5 +20,7 @@ resources["successful deployment"] = False
 resources["code"] = []  # To be a list of Chunk objects
 resources["bugs"] = []  # To be a list of Bug objects
 resources["mutating"] = True
-# Should the number of tickets also be a record of bugs? (I'm inclined to say no)
+resources["current chunk"] = None
+resources["current test"] = None
+resources["current bug"] = None
 

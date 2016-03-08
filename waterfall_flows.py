@@ -2,14 +2,12 @@ from software_engineering_atoms import *
 from base import *
 from decorators import flow, system_setup, metric
 import environment
-
 @system_setup
 def setup_environment():
-# The environment.resources we'll be editing
-# NOTE: These should ordinarily be amended to reflect the initial state of the project...
+    # The environment.resources we'll be editing
+    # NOTE: These should ordinarily be amended to reflect the initial state of the project...
     environment.resources = {}
-    environment.resources = {}
-    environment.resources["time"] = 200
+    environment.resources["time"] = 0
     environment.resources["seed"] = 0
     environment.resources["integration tests passing"] = False
     environment.resources["user acceptance tests passing"] = False
@@ -17,6 +15,10 @@ def setup_environment():
     environment.resources["code"] = []  # To be a list of Chunk objects
     environment.resources["bugs"] = []  # To be a list of Bug objects
     environment.resources["mutating"] = True
+    environment.resources["current chunk"] = None
+    environment.resources["current test"] = None
+    environment.resources["current bug"] = None
+
 
 @flow
 def implement_feature():
