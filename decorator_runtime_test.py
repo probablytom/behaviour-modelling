@@ -1,4 +1,5 @@
 from base import *
+
 import inspect
 
 @mutate__comment_single_line
@@ -23,6 +24,23 @@ def add_15_normal():
     results[2] += 3
     results[2] += 4
     results[2] += 5
+
+
+def comment_single_line_mutation(lines):
+    line_to_remove = random.choice(lines)
+    lines.remove(line_to_remove)
+    return lines
+
+
+@mutate(comment_single_line_mutation)
+def mutation_parameterisation_test():
+    results[0] = 0
+    results[0] += 1
+    results[0] += 2
+    results[0] += 3
+    results[0] += 4
+    results[0] += 5
+
 
 @mutate__comment_single_line
 def test_comment():

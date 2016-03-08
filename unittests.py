@@ -22,6 +22,15 @@ class TestMutationRandomness(unittest.TestCase):
         result2 = copy.copy(decorator_runtime_test.results)
         self.assertNotEqual(result1, result2)
 
+
+class TestParameterisedMutation(unittest.TestCase):
+    def test_mutation_parameterised(self):
+        decorator_runtime_test.results = [0,0,0]
+        decorator_runtime_test.add_15_normal()
+        decorator_runtime_test.mutation_parameterisation_test()
+        self.assertNotEqual(decorator_runtime_test.results[0], decorator_runtime_test.results[2])
+
+
 class TestModel(unittest.TestCase):
     def test_model_instances(self):
         flows.setup_environment()
@@ -90,7 +99,6 @@ class TestModel(unittest.TestCase):
             pass
         second_results = environment.resources
         self.assertGreater(first_results["features implemented"], second_results["features implemented"])
-
 
 @mutate__comment_single_line
 def mutation_randomness_test():
