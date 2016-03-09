@@ -27,8 +27,7 @@ def add_15_normal():
 
 
 def comment_single_line_mutation(lines):
-    line_to_remove = random.choice(lines)
-    lines.remove(line_to_remove)
+    lines.remove(random.choice(lines))
     return lines
 
 
