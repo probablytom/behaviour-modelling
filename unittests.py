@@ -93,6 +93,7 @@ from base import *
 
 
 class TestNewFlows(unittest.TestCase):
+
     def test_new_agile_model_completes(self):
         agile_flows.setup_environment()
         random.seed(environment.resources["seed"])
@@ -103,6 +104,15 @@ class TestNewFlows(unittest.TestCase):
         print environment.resources
         self.assertEqual(50, len(environment.resources["features"]))
 
+    def test_new_waterfall_model_completes(self):
+        waterfall_flows.setup_environment()
+        random.seed(environment.resources["seed"])
+        try:
+            waterfall_flows.implement_50_features()
+        except Exception, e:
+            print str(e)
+        print environment.resources
+        self.assertEqual(50, environment.resources["features implemented"])
 
 @mutate__comment_single_line
 def mutation_randomness_test():

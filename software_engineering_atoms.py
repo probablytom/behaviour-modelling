@@ -92,7 +92,34 @@ def add_chunk(testing=False):
     environment.resources["features"][feature].append(chunk)
 
     # Conditionally add a bug to the chunk
-    if random.randint(0,5) is 4:
+    if random.randint(3,5) is 4:
+        bug = dag.Bug(chunk)
+        environment.resources["bugs"].append(bug)
+
+    # We're now working on the chunk we just created, so...
+    environment.resources["current chunk"] = chunk
+
+
+# TODO: Potentially add currently existing bugs to this
+# TODO: Simulate tests that are ineffective
+@atom
+def add_chunk_waterfall(testing=False):
+    print "Adding chunk"
+    environment.resources["time"] += 2
+    chunk = dag.Chunk()
+
+    # Add a test if it's necessary
+    if testing:
+        test = environment.resources["tests"][-1]
+        chunk.test = test
+        test.chunk = chunk
+        environment.resources["tests"].append(test)
+
+    # Record this chunk of code
+    environment.resources["features"].append(chunk)
+
+    # Conditionally add a bug to the chunk
+    if random.randint(3,5) is 4:
         bug = dag.Bug(chunk)
         environment.resources["bugs"].append(bug)
 
@@ -120,7 +147,7 @@ def add_chunk_tdd(testing=True):
     environment.resources["features"][feature].append(chunk)
 
     # Conditionally add a bug to the chunk
-    if random.randint(0,5) is 4:
+    if random.randint(3,5) is 4:
         bug = dag.Bug(chunk)
         environment.resources["bugs"].append(bug)
 

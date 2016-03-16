@@ -12,71 +12,70 @@ def setup_environment():
     environment.resources["integration tests passing"] = False
     environment.resources["user acceptance tests passing"] = False
     environment.resources["successful deployment"] = False
-    environment.resources["code"] = []  # To be a list of Chunk objects
+    environment.resources["features"] = []  # To be a list of Chunk objects
     environment.resources["bugs"] = []  # To be a list of Bug objects
+    environment.resources["tests"] = []  # To be a list of Test objects
     environment.resources["mutating"] = True
     environment.resources["current chunk"] = None
     environment.resources["current test"] = None
     environment.resources["current bug"] = None
+    environment.resources["size of product in features"] = None
+    environment.resources["features implemented"] = 0
 
+def write_code():
+    add_chunk_waterfall()
 
-@flow
-def implement_feature():
-    write_code()
-
-@flow
-def coding():
-    # Implements 10 features
-    for i in range(0, 10):
-        implement_feature()
-
-@flow
 def unit_test():
-    write_tests()
+    for chunk in environment.resources["features"]:
+        print chunk  # TODO: Remove!
+        if chunk.test is None: create_test_for_chunk(chunk)
     run_tests()
-    if environment.resources["tests passing"] == False:
-        debug()
-        #unit_test()
+    while not environment.resources["unit tests passing"]:
+        fix_codebase()
+        run_tests()
 
-@flow
-def debug():
-    write_code()
-    run_tests()
 
-@mutate__comment_line_chance_20
-@flow
-def integration_testing():
-    run_integration_tests()
-    if environment.resources["integration tests passing"]:
-        unit_test()
-        run_integration_tests()
+def fix_codebase():
+    for test in environment.resources["tests"]:
+        if not test_passes(test):
+            fix_chunk(test.chunk)
 
-@flow
-def test():
-    user_acceptance_test()
-    while not environment.resources["user acceptance tests passing"]:
-        reimplement_feature()
-        unit_test()
+
+def integration_test():
+    perform_integration_tests()
+    while not environment.resources["integration tests passing"]:
+        fix_codebase()
+        perform_integration_tests()
+
+
+def user_acceptance_test():
+    perform_integration_tests()
+    while not environment.resources["integration tests passing"]:
+        fix_codebase()
+        perform_integration_tests()
         integration_test()
+
+
+@flow
+def create_product():
+    for i in range(environment.resources["size of product in features"]):
+        write_code()
+    for i in range(environment.resources["size of product in features"]):
+        unit_test()
+    for i in range(environment.resources["size of product in features"]):
+        integration_test()
+    for i in range(environment.resources["size of product in features"]):
         user_acceptance_test()
 
-@flow
-def reimplement_feature():
-    write_code()
+    environment.resources["features implemented"] += environment.resources["size of product in features"]
 
-# Implements 10 features
-@flow
-def create_major_version():
-    coding()
-    unit_test()
-    integration_test()
-    test()
+
 
 @flow
 def implement_50_features():
-    for i in range(0, 5):
-        create_major_version()
-        environment.resources["features implemented"] += 10
+    environment.resources["size of product in features"] = 50
+    create_product()
+
 
 '''
 NOTE 1
