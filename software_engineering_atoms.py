@@ -1,4 +1,4 @@
-import random, environment, dag
+import random, environment, dag, time
 from logger import Logger
 from decorators import atom, atom_args  # Will need renaming
 from base import atom_args
@@ -11,6 +11,7 @@ log = Logger(   "event.log",         False,           False)
 # HELPER FUNCTIONS
 # -----------------------------------------------------------------------------
 
+
 def is_tested(chunk):
     for test in environment.resources["tests"]:
         if test.chunk() is chunk: return True
@@ -19,12 +20,16 @@ def is_tested(chunk):
 
 def has_bug(chunk):
     for bug in environment.resources["bugs"]:
-        if chunk in bug.chunks(): return True
+        if bug.affects(chunk): return True
     return False
 
 
 def detects_bug(test, bug):
-    return test.chunk in bug.chunks and test.works
+    print test.chunk.id, bug.chunks[0].id
+    print bug.affects(test.chunk)
+    print "chunks\ttests\tbugs"
+    print len(environment.resources["features"]), len(environment.resources["tests"]), len(environment.resources["bugs"])
+    return bug.affects(test.chunk) and test.works
 
 
 def bug_found(bug):
@@ -32,23 +37,26 @@ def bug_found(bug):
         if detects_bug(test, bug): return True
     return False
 
+
 def get_feature_of_chunk(chunk):
     for feature in range(environment.resources["features"]):
         if chunk in environment.resources["features"][feature]: return feature
     return None
 
+
 def test_passes(test):
     for bug in environment.resources["bugs"]:
-        if detects_bug(test, bug): return True
-    return False
+        if detects_bug(test, bug): return False
+    return True
+
 
 def remove_bug(bug):
-    print "1"
     environment.resources["bugs"].remove(bug)
-    print "2"
+
 
 def cost_of_bug(bug):
     return bug.age() / 20 + 1
+
 
 def number_of_detected_bugs():
     n = 0
@@ -161,6 +169,7 @@ def create_test_for_chunk(chunk):
     if chunk.test is None:
         test = dag.Test(chunk)
         environment.resources["tests"].append(test)
+        chunk.test = test
 
 def create_test_tdd():
     environment.resources["time"] += 1
@@ -174,13 +183,14 @@ def fix_chunk(chunk=None):
 
     # Iterate over bugs that affect the chunk and thrash until fixed
     # TODO: Do this without actually thrashing...?
-    print environment.resources["bugs"]
     for bug in environment.resources["bugs"]:
         while detects_bug(chunk.test, bug):
             environment.resources["time"] += cost_of_bug(bug)
             if random.randint(0, 5) is 4:
                 remove_bug(bug)
                 break
+
+    time.sleep(.5)
 
 
 @atom

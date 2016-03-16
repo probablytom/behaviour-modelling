@@ -1,7 +1,7 @@
 from software_engineering_atoms import *
 from base import *
 from decorators import flow, system_setup, metric
-import environment
+import environment, time
 @system_setup
 def setup_environment():
     # The environment.resources we'll be editing
@@ -26,8 +26,8 @@ def write_code():
     add_chunk_waterfall()
 
 def unit_test():
+    print "unit testing"
     for chunk in environment.resources["features"]:
-        print chunk  # TODO: Remove!
         if chunk.test is None: create_test_for_chunk(chunk)
     run_tests()
     while not environment.resources["unit tests passing"]:
@@ -36,12 +36,14 @@ def unit_test():
 
 
 def fix_codebase():
+    print "fixing codebase"
     for test in environment.resources["tests"]:
         if not test_passes(test):
             fix_chunk(test.chunk)
 
 
 def integration_test():
+    print "Integration testing"
     perform_integration_tests()
     while not environment.resources["integration tests passing"]:
         fix_codebase()
@@ -49,6 +51,7 @@ def integration_test():
 
 
 def user_acceptance_test():
+    print "user acceptance testing"
     perform_integration_tests()
     while not environment.resources["integration tests passing"]:
         fix_codebase()
@@ -73,6 +76,7 @@ def create_product():
 
 @flow
 def implement_50_features():
+    time.sleep(3)
     environment.resources["size of product in features"] = 50
     create_product()
 

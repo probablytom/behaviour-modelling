@@ -1,9 +1,14 @@
 import environment
 
 class Vertex:
+    id = 0
+
     def __init__(self):
         self.adj = []  # A list of vertices this vertex points to
         self.timeCreated = environment.resources["time"]
+        self.id = Vertex.id
+        Vertex.id += 1
+
 
     def add_adjacent(self, other_vertex):
         self.adj.append(other_vertex)
@@ -21,6 +26,7 @@ class Vertex:
         return environment.resources["time"] - self.timeCreated
 
 
+
 '''
     The chunks a bug affects are its adjacent vertices
     i.e. if a bug applies to a chunk, add the chunk as an adjacent vertex
@@ -30,6 +36,11 @@ class Bug(Vertex):
         Vertex.__init__(self)
         self.chunks = []
         if buggy_chunk is not None: self.chunks.append(buggy_chunk)
+
+    def affects(self, chunk):
+        for affectedChunk in self.chunks:
+            if chunk.id == affectedChunk.id: return True
+        return False
 
 
 '''
