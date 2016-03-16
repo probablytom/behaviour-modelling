@@ -17,6 +17,9 @@ class Vertex:
     def is_adjacent_to(self, other_vertex):
         return other_vertex in self.adj
 
+    def age(self):
+        return environment.resources["time"] - self.timeCreated
+
 
 '''
     The chunks a bug affects are its adjacent vertices
@@ -25,8 +28,8 @@ class Vertex:
 class Bug(Vertex):
     def __init__(self, buggy_chunk=None):
         Vertex.__init__(self)
-        if buggy_chunk is not None:
-            self.add_adjacent(buggy_chunk)
+        self.chunks = []
+        if buggy_chunk is not None: self.chunks.append(buggy_chunk)
 
 
 '''
@@ -37,17 +40,10 @@ class Chunk(Vertex):
 
     def __init__(self, test=None):
         Vertex.__init__(self)
-        if test is not None:
-            self.test = test
+        self.test = test
 
     def is_tested(self):
         return self.test is not None
-
-    def set_test(self, test):
-        self.test = test
-
-    def get_test(self):
-        return self.test
 
 
 '''
@@ -56,8 +52,8 @@ class Chunk(Vertex):
 '''
 class Test(Vertex):
 
-    def __init__(self, chunk=None):
+    def __init__(self, chunk=None, works=True):
         Vertex.__init__(self)
-        if chunk is not None:
-            self.chunk = chunk
+        self.chunk = chunk
+        self.works = works
 

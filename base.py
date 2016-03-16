@@ -68,7 +68,7 @@ def exec_wrapper(mutant):
     exec(mutant)
 
 class ResourcesExpendedException(Exception):
-        pass
+    pass
 
 
 cache = {}

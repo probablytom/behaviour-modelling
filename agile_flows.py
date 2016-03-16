@@ -12,60 +12,73 @@ def setup_environment():
     environment.resources["seed"] = 0
     environment.resources["integration tests passing"] = False
     environment.resources["user acceptance tests passing"] = False
+    environment.resources["unit tests passing"] = False
     environment.resources["successful deployment"] = False
-    environment.resources["code"] = []  # To be a list of Chunk objects
+    environment.resources["features"] = []  # To be a list of Chunk objects
     environment.resources["bugs"] = []  # To be a list of Bug objects
+    environment.resources["tests"] = []
     environment.resources["mutating"] = True
     environment.resources["current chunk"] = None
-    environment.resources["current test"] = None
+    environment.resources["most recent test"] = None
     environment.resources["current bug"] = None
-
-def estimate_bugs():
-    return environment.resources["lines of code"] / 15  # each 15 lines of code roughly causes a bug?
+    environment.resources["current feature"] = 0
 
 @flow
-def write_code_using_tdd():
-    write_tests()
-    modify_code()
+def make_new_feature():
+    print "making feature"
+    create_feature()
 
-@flow
-@mutate__comment_line_chance_20
-def make_code_edit():
-    write_code()
+def implement_code():
+    print "implementing code"
+    create_test_tdd()
+    add_chunk_tdd()
+
+def unit_test():
+    print "unit testing"
     run_tests()
+    while not environment.resources["unit tests passing"]:
+        fix_recent_feature()
+        run_tests()
 
-@flow
-def modify_code():
-    make_code_edit()
-    while not environment.resources["tests passing"]:
-        make_code_edit()
 
-@flow
-def integration_testing_phase():
-    integration_test()
+def fix_recent_feature():
+    print "fixing recent feature"
+    for chunk in environment.resources["features"][-1]:
+        fix_chunk(chunk)
+
+
+def integration_test():
+    print "integration testing"
+    perform_integration_tests()
     while not environment.resources["integration tests passing"]:
-        modify_code()
-        integration_test()
+        unit_test()
+        perform_integration_tests()
 
-@flow
-def testing():
-    user_acceptance_test()
+def user_acceptance_test():
+    print "UA testing"
+    perform_user_acceptance_testing()
     while not environment.resources["user acceptance tests passing"]:
-        modify_code()
-        integration_testing_phase()
-        user_acceptance_test()
+        unit_test()
+        integration_test()
+        perform_user_acceptance_testing()
+
 
 @flow
 def implement_feature():
-    write_code_using_tdd()
-    integration_testing_phase()
+    make_new_feature()
+    implement_code()
+    unit_test()
+    integration_test()
     user_acceptance_test()
+    print "implemented feature " + str(len(environment.resources["features"]))
+
 
 @flow
 def implement_50_features():
     for i in range(50):
         implement_feature()
-        environment.resources["features implemented"] += 1
+        print "implemented " + str(i)
+
 
 '''
 NOTE 1
