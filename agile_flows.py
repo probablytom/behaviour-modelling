@@ -1,11 +1,27 @@
 from software_engineering_atoms import *
 from decorators import flow, system_setup
-import environment, base
+import environment
+from base import mutate
+
+def random_boolean():
+    return random.choice([True, False])
+
+
+def stressed(lines):
+    if random_boolean():
+        lines.remove(random.choice(lines))
+    return lines
+
+
+def cannot_meet_deadline(lines):
+    if random_boolean():
+        lines = lines[random.randint(1, len(lines)-1):]
+    return lines
+
 
 @system_setup
 def setup_environment():
-# The environment.resources we'll be editing
-# NOTE: These should ordinarily be amended to reflect the initial state of the project...
+    # The environment.resources we'll be editing
     environment.resources = {}
     environment.resources["time"] = 0
     environment.resources["seed"] = 0
@@ -22,13 +38,17 @@ def setup_environment():
     environment.resources["current bug"] = None
     environment.resources["current feature"] = 0
 
+    # Also reset the cache of the mutator
+    mutate.reset()
+
 @flow
 def make_new_feature():
     create_feature()
 
 
 @flow
-def implement_code():
+@mutate(stressed)
+def create_test_and_code():
     create_test_tdd()
     add_chunk_tdd()
 
@@ -69,7 +89,7 @@ def user_acceptance_test():
 @flow
 def implement_feature():
     make_new_feature()
-    implement_code()
+    create_test_and_code()
     unit_test()
     integration_test()
     user_acceptance_test()

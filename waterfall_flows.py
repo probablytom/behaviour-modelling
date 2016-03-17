@@ -1,12 +1,28 @@
 from software_engineering_atoms import *
 from decorators import flow, system_setup
-import environment, base
+import environment
+from base import mutate
+
+
+def random_boolean():
+    return random.choice([True, False])
+
+
+def stressed(lines):
+    if random_boolean():
+        lines.remove(random.choice(lines))
+    return lines
+
+
+def cannot_meet_deadline(lines):
+    if random_boolean():
+        lines = lines[random.randint(1, len(lines)-1):]
+    return lines
 
 
 @system_setup
 def setup_environment():
     # The environment.resources we'll be editing
-    # NOTE: These should ordinarily be amended to reflect the initial state of the project...
     environment.resources = {}
     environment.resources["time"] = 0
     environment.resources["seed"] = 0
@@ -23,9 +39,17 @@ def setup_environment():
     environment.resources["size of product in features"] = None
     environment.resources["features implemented"] = 0
 
+    # Also reset the cache of the mutator
+    mutate.reset()
+
+
+@flow
 def write_code():
     add_chunk_waterfall()
 
+
+@flow
+@mutate(stressed)
 def unit_test():
     for chunk in environment.resources["features"]:
         if chunk.test is None: create_test_for_chunk(chunk)
@@ -35,12 +59,14 @@ def unit_test():
         run_tests()
 
 
+@flow
 def fix_codebase():
     for test in environment.resources["tests"]:
         if not test_passes(test):
             fix_chunk(test.chunk)
 
 
+@flow
 def integration_test():
     perform_integration_tests()
     while not environment.resources["integration tests passing"]:
@@ -48,6 +74,7 @@ def integration_test():
         perform_integration_tests()
 
 
+@flow
 def user_acceptance_test():
     perform_integration_tests()
     while not environment.resources["integration tests passing"]:

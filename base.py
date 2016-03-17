@@ -15,8 +15,6 @@ class Mutator(ast.NodeTransformer):
 
     #NOTE: This will work differently depending on whether the decorator takes arguments.
     def visit_FunctionDef(self, node):
-        # Only actually mutate if we have the necessary flags
-        if environment.resources["mutating"]==False: return self.generic_visit(node)
 
         # Fix the randomisation to the environment
         random.seed(environment.resources["seed"])
@@ -45,21 +43,28 @@ class mutate(object):
     def __call__(self, func):
         def wrap(*args, **kwargs):
 
-            # Load function source from mutate.cache if available
-            if func in mutate.cache.keys():
-                func_source = mutate.cache[func]
+            if environment.resources["mutating"] is True:
+
+                # Load function source from mutate.cache if available
+                if func.func_name in mutate.cache.keys():
+                    func_source = mutate.cache[func.func_name]
+                else:
+                    func_source = inspect.getsourcelines(func)[0]  # This is our problem: always gives us the first func.
+                    mutate.cache[func.func_name] = func_source
+                # Create function source
+                func_source = ''.join(func_source) + '\n' + func.func_name + '_mod' + '()'
+                # Mutate using the new mutator class
+                mutator = Mutator(self.mutation_type)
+                abstract_syntax_tree = ast.parse(func_source)
+                mutated_func_uncompiled = mutator.visit(abstract_syntax_tree)
+                mutated_func = func
+                mutated_func.func_code = compile(mutated_func_uncompiled, inspect.getsourcefile(func), 'exec')
+                mutate.cache[(func, self.mutation_type)] = mutated_func
+                mutated_func(*args, **kwargs)
             else:
-                func_source = inspect.getsourcelines(func)[0]  # This is our problem: always gives us the first func.
-                mutate.cache[func] = func_source
-            # Create function source
-            func_source = ''.join(func_source) + '\n' + func.func_name + '_mod' + '()'
-            # Mutate using the new mutator class
-            mutator = Mutator(self.mutation_type)
-            abstract_syntax_tree = ast.parse(func_source)
-            mutated_func_uncompiled = mutator.visit(abstract_syntax_tree)
-            mutated_func = func
-            mutated_func.func_code = compile(mutated_func_uncompiled, inspect.getsourcefile(func), 'exec')
-            mutate.cache[(func, self.mutation_type)] = mutated_func
-            mutated_func(*args, **kwargs)
+                func(*args, **kwargs)
         return wrap
 
+    @staticmethod
+    def reset():
+        mutate.cache = {}
