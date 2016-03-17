@@ -2,7 +2,15 @@ from base import *
 
 import inspect
 
-@mutate__comment_single_line
+def comment_single_line(lines):
+    lines = lines.remove(random.choice(lines))
+    return lines
+
+def truncate_function(lines):
+    lines = lines[random.randint(1,len(lines)-1):]
+    return lines
+
+@mutate(comment_single_line)
 def add_15_comment():
     results[0] += 1
     results[0] += 2
@@ -10,7 +18,7 @@ def add_15_comment():
     results[0] += 4
     results[0] += 5
 
-@mutate__truncate_function
+@mutate(truncate_function)
 def add_15_truncate():
     results[1] += 1
     results[1] += 2
@@ -31,7 +39,7 @@ def comment_single_line_mutation(lines):
     return lines
 
 
-@mutate(comment_single_line_mutation)
+@mutate(comment_single_line)
 def mutation_parameterisation_test():
     results[0] = 0
     results[0] += 1
@@ -41,7 +49,7 @@ def mutation_parameterisation_test():
     results[0] += 5
 
 
-@mutate__comment_single_line
+@mutate(comment_single_line)
 def test_comment():
     print 1 
     print 2 
@@ -49,7 +57,7 @@ def test_comment():
     print 4
     print 5
 
-@mutate__truncate_function
+@mutate(truncate_function)
 def test_truncate():
     print "the"
     print "quick"

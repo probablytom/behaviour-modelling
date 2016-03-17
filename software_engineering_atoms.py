@@ -1,7 +1,6 @@
 import random, environment, dag, time
 from logger import Logger
-from decorators import atom, atom_args  # Will need renaming
-from base import atom_args
+from decorators import atom # Will need renaming
 
 # For keeping a log / printing to the console
 # filepath-----\/           Logging--\/   printing--\/
@@ -25,10 +24,6 @@ def has_bug(chunk):
 
 
 def detects_bug(test, bug):
-    print test.chunk.id, bug.chunks[0].id
-    print bug.affects(test.chunk)
-    print "chunks\ttests\tbugs"
-    print len(environment.resources["features"]), len(environment.resources["tests"]), len(environment.resources["bugs"])
     return bug.affects(test.chunk) and test.works
 
 
@@ -84,7 +79,6 @@ def create_feature():
 # TODO: Simulate tests that are ineffective
 @atom
 def add_chunk(testing=False):
-    print "Adding chunk"
     environment.resources["time"] += 2
     feature = environment.resources["current feature"]
     chunk = dag.Chunk()
@@ -112,7 +106,6 @@ def add_chunk(testing=False):
 # TODO: Simulate tests that are ineffective
 @atom
 def add_chunk_waterfall(testing=False):
-    print "Adding chunk"
     environment.resources["time"] += 2
     chunk = dag.Chunk()
 
@@ -190,8 +183,6 @@ def fix_chunk(chunk=None):
                 remove_bug(bug)
                 break
 
-    time.sleep(.5)
-
 
 @atom
 def perform_integration_tests():
@@ -213,9 +204,7 @@ def run_tests():
 # TODO: Don't expect behaviour driven tests (because then passing tests != happy users)
 @atom
 def perform_user_acceptance_testing():
-    print 1
     environment.resources["time"] += 1
-    print 2
     environment.resources["user acceptance tests passing"] = environment.resources["unit tests passing"]
     return environment.resources["user acceptance tests passing"]
 

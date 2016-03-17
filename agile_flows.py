@@ -25,16 +25,13 @@ def setup_environment():
 
 @flow
 def make_new_feature():
-    print "making feature"
     create_feature()
 
 def implement_code():
-    print "implementing code"
     create_test_tdd()
     add_chunk_tdd()
 
 def unit_test():
-    print "unit testing"
     run_tests()
     while not environment.resources["unit tests passing"]:
         fix_recent_feature()
@@ -42,20 +39,17 @@ def unit_test():
 
 
 def fix_recent_feature():
-    print "fixing recent feature"
     for chunk in environment.resources["features"][-1]:
         fix_chunk(chunk)
 
 
 def integration_test():
-    print "integration testing"
     perform_integration_tests()
     while not environment.resources["integration tests passing"]:
         unit_test()
         perform_integration_tests()
 
 def user_acceptance_test():
-    print "UA testing"
     perform_user_acceptance_testing()
     while not environment.resources["user acceptance tests passing"]:
         unit_test()
@@ -70,14 +64,12 @@ def implement_feature():
     unit_test()
     integration_test()
     user_acceptance_test()
-    print "implemented feature " + str(len(environment.resources["features"]))
 
 
 @flow
 def implement_50_features():
     for i in range(50):
         implement_feature()
-        print "implemented " + str(i)
 
 
 '''
