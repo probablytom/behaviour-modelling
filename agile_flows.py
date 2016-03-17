@@ -15,7 +15,7 @@ def stressed(lines):
 
 def cannot_meet_deadline(lines):
     if random_boolean():
-        lines = lines[random.randint(1, len(lines)-1):]
+        lines = lines[:random.randint(1, len(lines)-1)]
     return lines
 
 
@@ -47,10 +47,11 @@ def make_new_feature():
 
 
 @flow
-@mutate(stressed)
+@mutate(cannot_meet_deadline)
 def create_test_and_code():
     create_test_tdd()
     add_chunk_tdd()
+    print "test"
 
 
 @flow

@@ -16,7 +16,7 @@ def stressed(lines):
 
 def cannot_meet_deadline(lines):
     if random_boolean():
-        lines = lines[random.randint(1, len(lines)-1):]
+        lines = lines[:random.randint(1, len(lines)-1)]
     return lines
 
 
@@ -49,14 +49,17 @@ def write_code():
 
 
 @flow
-@mutate(stressed)
+@mutate(cannot_meet_deadline)
 def unit_test():
+    print "test1"
     for chunk in environment.resources["features"]:
         if chunk.test is None: create_test_for_chunk(chunk)
     run_tests()
     while not environment.resources["unit tests passing"]:
         fix_codebase()
         run_tests()
+
+    print "test2"
 
 
 @flow
