@@ -114,6 +114,7 @@ class TestNewFlows(unittest.TestCase):
         print environment.resources
         self.assertEqual(50, environment.resources["features implemented"])
 
+
 @mutate__comment_single_line
 def mutation_randomness_test():
     results[0] = 0
