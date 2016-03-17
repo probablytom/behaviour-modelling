@@ -1,7 +1,6 @@
 from software_engineering_atoms import *
-from base import *
-from decorators import flow, system_setup, metric
-import environment
+from decorators import flow, system_setup
+import environment, base
 
 @system_setup
 def setup_environment():
@@ -27,10 +26,14 @@ def setup_environment():
 def make_new_feature():
     create_feature()
 
+
+@flow
 def implement_code():
     create_test_tdd()
     add_chunk_tdd()
 
+
+@flow
 def unit_test():
     run_tests()
     while not environment.resources["unit tests passing"]:
@@ -38,17 +41,23 @@ def unit_test():
         run_tests()
 
 
+
+@flow
 def fix_recent_feature():
     for chunk in environment.resources["features"][-1]:
         fix_chunk(chunk)
 
 
+
+@flow
 def integration_test():
     perform_integration_tests()
     while not environment.resources["integration tests passing"]:
         unit_test()
         perform_integration_tests()
 
+
+@flow
 def user_acceptance_test():
     perform_user_acceptance_testing()
     while not environment.resources["user acceptance tests passing"]:

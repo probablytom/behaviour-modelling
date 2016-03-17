@@ -1,42 +1,7 @@
-import environment, sys, re, ast, random, ast, codegen, inspect, copy
-from codegen import to_source
+import environment, random, ast, inspect
 
 class ResourcesExpendedException(Exception):
     pass
-
-
-cache = {}
-
-
-def atom(func):
-    def wrapper(*args, **kwargs):
-        if precondition():
-            #generic_retrieve_mutation(func, 'comment_single_line')(*args, **kwargs)
-            func(*args, **kwargs)
-#             post_function_sequence(**kwargs)
-    
-    return wrapper
-
-def flow(func):
-    def wrapper(*args, **kwargs):
-        if precondition():
-            func(*args, **kwargs)
-    return wrapper
-
-
-def metric(func):
-    def wrapper(*args, **kwargs):
-        func(*args, **kwargs)
-    return wrapper
-
-
-# A boolean function that tells you whether you should be running the function passed into the decorator or not. 
-# This should be a bool for any implementation of the system. 
-def precondition():
-    result = environment.resources["time"] >= 0
-    if not result: 
-        raise ResourcesExpendedException()
-    return result
 
 
 class Mutator(ast.NodeTransformer):
@@ -71,18 +36,21 @@ class Mutator(ast.NodeTransformer):
 
 
 class mutate(object):
+
+    cache = {}
+
     def __init__(self, mutation_type):
         self.mutation_type = mutation_type
 
     def __call__(self, func):
         def wrap(*args, **kwargs):
 
-            # Load function source from cache if available
-            if func in cache.keys():
-                func_source = cache[func]
+            # Load function source from mutate.cache if available
+            if func in mutate.cache.keys():
+                func_source = mutate.cache[func]
             else:
                 func_source = inspect.getsourcelines(func)[0]  # This is our problem: always gives us the first func.
-                cache[func] = func_source
+                mutate.cache[func] = func_source
             # Create function source
             func_source = ''.join(func_source) + '\n' + func.func_name + '_mod' + '()'
             # Mutate using the new mutator class
@@ -91,7 +59,7 @@ class mutate(object):
             mutated_func_uncompiled = mutator.visit(abstract_syntax_tree)
             mutated_func = func
             mutated_func.func_code = compile(mutated_func_uncompiled, inspect.getsourcefile(func), 'exec')
-            cache[(func, self.mutation_type)] = mutated_func
+            mutate.cache[(func, self.mutation_type)] = mutated_func
             mutated_func(*args, **kwargs)
         return wrap
 
