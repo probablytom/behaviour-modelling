@@ -136,3 +136,9 @@ class CompareMutantVariance(unittest.TestCase):
         # Are the mutated results within a 10% margin of the unmutated results?
         self.assertNotAlmostEqual(unmutated_results["time"], mutated_results["time"],
                                   delta=unmutated_results["time"]*.1)
+
+
+
+if __name__ == "__main__":
+    sys.setrecursionlimit(10000000)
+    unittest.main(verbosity=2)

@@ -39,7 +39,7 @@ def setup_environment():
     environment.resources["current feature"] = 0
 
     # Also reset the cache of the mutator
-    mutate.reset()
+    # mutate.reset()
 
 @flow
 def make_new_feature():

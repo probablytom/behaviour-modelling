@@ -41,7 +41,7 @@ def setup_environment():
     environment.resources["features implemented"] = 0
 
     # Also reset the cache of the mutator
-    mutate.reset()
+    # mutate.reset()
 
 
 @flow
