@@ -24,6 +24,9 @@ def has_bug(chunk):
 
 
 def detects_bug(test, bug):
+    if test is None: return False
+    if bug is None: return False
+    if test.chunk is None or bug.chunks == []: return False
     return bug.affects(test.chunk) and test.works
 
 
@@ -111,10 +114,12 @@ def add_chunk_waterfall(testing=False):
 
     # Add a test if it's necessary
     if testing:
-        test = environment.resources["tests"][-1]
-        chunk.test = test
-        test.chunk = chunk
-        environment.resources["tests"].append(test)
+        if len(environment.resources["tests"]) is not 0:
+            test = environment.resources["tests"][-1]
+            if test is not None:
+                chunk.test = test
+                test.chunk = chunk
+                environment.resources["tests"].append(test)
 
     # Record this chunk of code
     environment.resources["features"].append(chunk)
@@ -138,11 +143,12 @@ def add_chunk_tdd(testing=True):
 
     # Add a test if it's necessary
     if testing:
-        test = environment.resources["tests"][-1]
-        if test is not None:
-            chunk.test = test
-            test.chunk = chunk
-            environment.resources["tests"].append(test)
+        if len(environment.resources["tests"]) is not 0:
+            test = environment.resources["tests"][-1]
+            if test is not None:
+                chunk.test = test
+                test.chunk = chunk
+                environment.resources["tests"].append(test)
 
     # Record this chunk of code
     environment.resources["features"][feature].append(chunk)
@@ -182,6 +188,7 @@ def fix_chunk(chunk=None):
             if random.randint(0, 5) is 4:
                 remove_bug(bug)
                 break
+
 
 
 @atom

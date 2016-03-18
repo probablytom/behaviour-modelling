@@ -28,6 +28,7 @@ def setup_environment():
     environment.resources["seed"] = 0
     environment.resources["integration tests passing"] = False
     environment.resources["user acceptance tests passing"] = False
+    environment.resources["unit tests passing"] = False
     environment.resources["successful deployment"] = False
     environment.resources["features"] = []  # To be a list of Chunk objects
     environment.resources["bugs"] = []  # To be a list of Bug objects
@@ -49,17 +50,14 @@ def write_code():
 
 
 @flow
-@mutate(cannot_meet_deadline)
+@mutate(stressed)
 def unit_test():
-    print "test1"
     for chunk in environment.resources["features"]:
         if chunk.test is None: create_test_for_chunk(chunk)
     run_tests()
     while not environment.resources["unit tests passing"]:
         fix_codebase()
         run_tests()
-
-    print "test2"
 
 
 @flow

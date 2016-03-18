@@ -46,12 +46,10 @@ def make_new_feature():
     create_feature()
 
 
-@flow
-@mutate(cannot_meet_deadline)
+@mutate(stressed)
 def create_test_and_code():
     create_test_tdd()
     add_chunk_tdd()
-    print "test"
 
 
 @flow
