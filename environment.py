@@ -10,6 +10,9 @@ def coverage_rate():
     lines_covered = min(lines_covered, resources["lines of code"])
     return float(lines_covered) / resources["lines of code"]
 
+# EMF
+# Models conference
+# Product lines
 
 resources = {}
 resources["time"] = 0

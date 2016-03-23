@@ -17,8 +17,6 @@ class TestVariance(unittest.TestCase):
             self.assertTrue(False, str(e))
         agile_results = copy.deepcopy(environment.resources)
 
-        print 2
-
         agile_flows.setup_environment()
         random.seed(environment.resources["seed"])
         environment.resources["mutating"] = False
@@ -28,8 +26,6 @@ class TestVariance(unittest.TestCase):
             print str(e)
             self.assertTrue(False, str(e))
         agile_unmutated_results = copy.deepcopy(environment.resources)
-
-        print 3
 
         waterfall_flows.setup_environment()
         random.seed(environment.resources["seed"])
@@ -41,8 +37,6 @@ class TestVariance(unittest.TestCase):
             self.assertTrue(False, str(e))
         waterfall_unmutated_results = copy.deepcopy(environment.resources)
 
-        print 4
-
         waterfall_flows.setup_environment()
         random.seed(environment.resources["seed"])
         environment.resources["mutating"] = True
@@ -52,8 +46,6 @@ class TestVariance(unittest.TestCase):
             print str(e)
             self.assertTrue(False, str(e))
         waterfall_results = copy.deepcopy(environment.resources)
-
-        print 5
 
         # Calculate some results. Which is more affected?
         agile_difference_under_stress = abs(agile_results["time"] - agile_unmutated_results["time"]) / float(agile_results["time"])
@@ -82,7 +74,7 @@ class CompareMutantVariance(unittest.TestCase):
         try:
             waterfall_flows.implement_50_features()
         except Exception, e:
-            print str(e), " THIS IS AN ERROR"
+            print str(e)
             self.assertTrue(False, str(e))
         self.assertEqual(50, environment.resources["size of product in features"])
 

@@ -45,25 +45,11 @@ class mutate(object):
 
             if environment.resources["mutating"] is True:
 
-                print func.func_name
-
                 # Load function source from mutate.cache if available
                 if func.func_name in mutate.cache.keys():
                     func_source = mutate.cache[func.func_name]
                 else:
                     func_source = inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
-                    print inspect.getsource(func)
                     mutate.cache[func.func_name] = func_source
                 # Create function source
                 func_source = ''.join(func_source) + '\n' + func.func_name + '_mod' + '()'
