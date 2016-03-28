@@ -1,5 +1,5 @@
 import unittest, environment, sys, agile_flows, waterfall_flows, copy
-from base import *
+from fuzzing_base import *
 
 class TestVariance(unittest.TestCase):
 

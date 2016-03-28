@@ -2,7 +2,7 @@ import unittest, environment, sys, agile_flows, waterfall_flows, copy
 
 import time
 
-from base import *
+from fuzzing_base import *
 
 
 class CompareMutantVariance(unittest.TestCase):

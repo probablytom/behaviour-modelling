@@ -1,4 +1,4 @@
-from base import *
+from fuzzing_base import *
 
 import inspect
 

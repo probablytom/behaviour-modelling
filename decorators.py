@@ -1,4 +1,4 @@
-import base, environment
+import fuzzing_base, environment
 
 def atom(func):
     def wrapper(*args, **kwargs):
@@ -37,7 +37,7 @@ def metric(func):
 def precondition():
     result = environment.resources["time"] >= 0
     if not result: 
-        raise base.ResourcesExpendedException()
+        raise fuzzing_base.ResourcesExpendedException()
     return result
 
 def metric_successful():

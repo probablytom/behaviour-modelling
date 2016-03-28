@@ -1,7 +1,7 @@
 from software_engineering_atoms import *
 from decorators import flow, system_setup
 import environment
-from base import mutate
+from fuzzing_base import mutate
 
 def random_boolean():
     return random.choice([True, False])
