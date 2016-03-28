@@ -1,7 +1,4 @@
 import unittest, environment, sys, agile_flows, waterfall_flows, copy
-
-import math
-
 from fuzzing_base import *
 
 
