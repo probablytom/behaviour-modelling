@@ -39,7 +39,8 @@ class Bug(Vertex):
 
     def affects(self, chunk):
         for affectedChunk in self.chunks:
-            if chunk.id == affectedChunk.id: return True
+            if chunk.id == affectedChunk.id:
+                return True
         return False
 
 

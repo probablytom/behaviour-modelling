@@ -1,19 +1,4 @@
 # The resources we'll be editing
-
-def probability_of_bug_detection():
-    lines_covered = resources["number of tests"] * resources["average test coverage in lines of code"]
-    lines_covered = min(lines_covered, resources["lines of code"])
-    return float(lines_covered) / resources["lines of code"]
-
-def coverage_rate():
-    lines_covered = resources["number of tests"] * resources["average test coverage in lines of code"]
-    lines_covered = min(lines_covered, resources["lines of code"])
-    return float(lines_covered) / resources["lines of code"]
-
-# EMF
-# Models conference
-# Product lines
-
 resources = {}
 resources["time"] = 0
 resources["seed"] = 0

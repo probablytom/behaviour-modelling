@@ -50,7 +50,6 @@ def write_code():
 
 
 @flow
-@mutate(stressed)
 def unit_test():
     for chunk in environment.resources["features"]:
         if chunk.test is None: create_test_for_chunk(chunk)
@@ -85,6 +84,7 @@ def user_acceptance_test():
 
 
 @flow
+@mutate(stressed)
 def create_product():
     for i in range(environment.resources["size of product in features"]):
         write_code()

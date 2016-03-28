@@ -32,7 +32,8 @@ def detects_bug(test, bug):
 
 def bug_found(bug):
     for test in environment.resources["tests"]:
-        if detects_bug(test, bug): return True
+        if detects_bug(test, bug):
+            return True
     return False
 
 
@@ -78,8 +79,6 @@ def create_feature():
     environment.resources["current feature"] = len(environment.resources["features"])-1
 
 
-# TODO: Potentially add currently existing bugs to this
-# TODO: Simulate tests that are ineffective
 @atom
 def add_chunk(testing=False):
     environment.resources["time"] += 2
@@ -105,8 +104,6 @@ def add_chunk(testing=False):
     environment.resources["current chunk"] = chunk
 
 
-# TODO: Potentially add currently existing bugs to this
-# TODO: Simulate tests that are ineffective
 @atom
 def add_chunk_waterfall(testing=False):
     environment.resources["time"] += 2
@@ -133,8 +130,6 @@ def add_chunk_waterfall(testing=False):
     environment.resources["current chunk"] = chunk
 
 
-# TODO: Potentially add currently existing bugs to this
-# TODO: Simulate tests that are ineffective
 @atom
 def add_chunk_tdd(testing=True):
     environment.resources["time"] += 2
@@ -181,14 +176,12 @@ def fix_chunk(chunk=None):
     if chunk is None: chunk = environment.resources["current chunk"]
 
     # Iterate over bugs that affect the chunk and thrash until fixed
-    # TODO: Do this without actually thrashing...?
     for bug in environment.resources["bugs"]:
         while detects_bug(chunk.test, bug):
             environment.resources["time"] += cost_of_bug(bug)
             if random.randint(0, 5) is 4:
                 remove_bug(bug)
                 break
-
 
 
 @atom
@@ -208,7 +201,6 @@ def run_tests():
     return environment.resources["unit tests passing"]
 
 
-# TODO: Don't expect behaviour driven tests (because then passing tests != happy users)
 @atom
 def perform_user_acceptance_testing():
     environment.resources["time"] += 1

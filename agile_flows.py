@@ -46,7 +46,6 @@ def make_new_feature():
     create_feature()
 
 
-@mutate(stressed)
 def create_test_and_code():
     create_test_tdd()
     add_chunk_tdd()
@@ -60,12 +59,11 @@ def unit_test():
         run_tests()
 
 
-
 @flow
 def fix_recent_feature():
-    for chunk in environment.resources["features"][-1]:
-        fix_chunk(chunk)
-
+    for feature in environment.resources['features']:
+        for chunk in feature:
+            fix_chunk(chunk)
 
 
 @flow
@@ -86,8 +84,8 @@ def user_acceptance_test():
 
 
 @flow
+@mutate(stressed)
 def implement_feature():
-    make_new_feature()
     create_test_and_code()
     unit_test()
     integration_test()
@@ -97,6 +95,7 @@ def implement_feature():
 @flow
 def implement_50_features():
     for i in range(50):
+        make_new_feature()
         implement_feature()
 
 
