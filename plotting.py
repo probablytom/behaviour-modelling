@@ -80,7 +80,7 @@ rects2 = ax.bar(ind + width, waterfall_deltas, width, color='y')
 
 # add some text for labels, title and axes ticks
 ax.set_ylabel('Delta of time taken')
-ax.set_title('Delta of time taken when mutated, varying seed')
+ax.set_title('Delta of time taken when introducing difficult deadlines, varying seed')
 ax.set_xticks(ind + width)
 ax.set_xticklabels(('0', '50', '100', '150'))
 

@@ -84,7 +84,7 @@ def user_acceptance_test():
 
 
 @flow
-@mutate(stressed)
+@mutate(cannot_meet_deadline)
 def create_product():
     for i in range(environment.resources["size of product in features"]):
         write_code()

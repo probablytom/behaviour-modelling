@@ -84,7 +84,7 @@ def user_acceptance_test():
 
 
 @flow
-@mutate(stressed)
+@mutate(cannot_meet_deadline)
 def implement_feature():
     create_test_and_code()
     unit_test()
